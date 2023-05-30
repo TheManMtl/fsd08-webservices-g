@@ -28,7 +28,7 @@ module.exports = app => {
 };
 
 //Create a new object
-exports.create = (req, res) => {
+/* exports.create = (req, res) => {
     // Validate request
     if (!req.body) {
         res.status(400).send({
@@ -67,8 +67,9 @@ exports.findAll = (req, res) => {
         else res.send(data);
     });
 };
+ */
 
-exports.findAllPublished = (req, res) => {
+/* exports.findAllPublished = (req, res) => {
     Tutorial.getAllPublished((err, data) => {
         if (err)
             res.status(500).send({
@@ -77,9 +78,9 @@ exports.findAllPublished = (req, res) => {
             });
         else res.send(data);
     });
-};
+}; */
 
-exports.findOne = (req, res) => {
+/* exports.findOne = (req, res) => {
     Tutorial.findById(req.params.id, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
@@ -93,11 +94,11 @@ exports.findOne = (req, res) => {
             }
         } else res.send(data);
     });
-};
+}; */
 
 
 //Update an object
-
+/* 
 exports.update = (req, res) => {
     // Validate Request
     if (!req.body) {
@@ -125,9 +126,9 @@ exports.update = (req, res) => {
         } else res.send(data);
       }
     );
-  };
+  }; */
 //Delete an object
-
+/* 
 exports.delete = (req, res) => {
     Tutorial.remove(req.params.id, (err, data) => {
       if (err) {
@@ -143,9 +144,9 @@ exports.delete = (req, res) => {
       } else res.send({ message: `Tutorial was deleted successfully!` });
     });
   };
-
+ */
   //Delete all objects
-
+/* 
 exports.deleteAll = (req, res) => {
   Tutorial.removeAll((err, data) => {
     if (err)
@@ -156,3 +157,4 @@ exports.deleteAll = (req, res) => {
     else res.send({ message: `All Tutorials were deleted successfully!` });
   });
 };
+ */
