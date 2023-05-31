@@ -117,6 +117,8 @@ exports.delete = (req, res) => {
 
 function isValid(req, res) {
 
+    var isDoneEnum=['Pending','Done'];
+
     var year = req.body.dueDate.slice(0, 4);
 
     //console.log("isValid: ",res);
@@ -137,10 +139,9 @@ function isValid(req, res) {
         return false;
 
     }
-    if (req.body.isDone != "Pending" && req.body.isDone !== "Done") {
+    if (!isDoneEnum.includes(req.body.isDone)) {
         res.status(400).send({ message: "Not supported value in Is done ;)" });
         return false;
-
     }
     return true;
 
