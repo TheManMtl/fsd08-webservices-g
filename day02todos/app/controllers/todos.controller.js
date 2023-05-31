@@ -1,3 +1,5 @@
+const ToDoclass = require("../models/todos.model");
+
 //Create and Save a new Todo
 exports.create = (req, res) => {
     // Validate request
@@ -27,6 +29,8 @@ exports.create = (req, res) => {
 
 // Retrieve all Todos from the database (with condition).
 exports.findAll = (req, res) => {
+
+    
     const task = req.query.task;
 
     ToDoclass.getAll(task, (err, data) => {
@@ -69,19 +73,19 @@ exports.update = (req, res) => {
 
     ToDoclass.updateById(
         req.params.id,
-        new ToDo(req.body),
+        new ToDoclass(req.body),
         (err, data) => {
             if (err) {
                 if (err.kind === "not_found") {
-                    res.body(false).status(404).send({
+                    res.status(404).send({
                         message: `Not found ToDo with id ${req.params.id}.`
                     });
                 } else {
-                    res.body(false).status(500).send({
+                    res.status(500).send({
                         message: "Error updating ToDo with id " + req.params.id
                     });
                 }
-            } else res.body(true).status(200).send(data);
+            } else res.status(200).send(data);
         }
     );
 };
@@ -91,14 +95,14 @@ exports.delete = (req, res) => {
     ToDoclass.remove(req.params.id, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
-                res.body(false).status(404).send({
+                res.status(404).send({
                     message: `Not found ToDo with id ${req.params.id}.`
                 });
             } else {
-                res.body(false).status(500).send({
+                res.status(500).send({
                     message: "Could not delete ToDo with id " + req.params.id
                 });
             }
-        } else res.body(true).status(200).send({ message: `ToDo was deleted successfully!` });
+        } else res.status(200).send({ message: `ToDo was deleted successfully!` });
     });
 };

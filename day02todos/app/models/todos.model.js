@@ -37,14 +37,14 @@ ToDoclass.findById = (id, result) => {
       return;
     }
 
-    // not found Tutorial with the id
+    // not found ToDO with the id
     result({ kind: "not_found" }, null);
   });
 };
 
 // return all todo[serach by task and return all if any]
 ToDoclass.getAll = (task, result) => {
-  let query = "SELECT * FROM tutorials";
+  let query = "SELECT * FROM todos";
 
   if (task) {
     query += ` WHERE task LIKE '%${task}%'`;
@@ -57,7 +57,7 @@ ToDoclass.getAll = (task, result) => {
       return;
     }
 
-    console.log("tutorials: ", res);
+    console.log("ToDos: ", res);
     result(null, res);
   });
 };
@@ -65,7 +65,7 @@ ToDoclass.getAll = (task, result) => {
 //update a todo 
 ToDoclass.updateById = (id, todo, result) => {
   sql.query(
-    "UPDATE tutorials SET task = ?, dueDate = ?, isDone = ? WHERE id = ?",
+    "UPDATE todos SET task = ?, dueDate = ?, isDone = ? WHERE id = ?",
     [todo.task, todo.dueDate, todo.isDone, id],
     (err, res) => {
       if (err) {

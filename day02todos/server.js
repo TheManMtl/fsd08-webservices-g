@@ -23,13 +23,21 @@ app.use(express.urlencoded({ extended: true }));
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to ToDoS application." });
- //console.log(res);
+ console.log(res);
 });
 
 require("./app/routes/todos.routes.js")(app);
 
 // set port, listen for requests
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8181;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+
+
+//require("./app/routes/todos.routes.js")(app);
+
+
+/* const express = require("express");
+const app = express();
+console.log(require("./app/routes/todos.routes.js")(app)) */
