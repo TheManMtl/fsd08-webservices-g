@@ -22,11 +22,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to TODOS application." });
+  res.json({ message: "Welcome to ToDoS application." });
  //console.log(res);
 });
 
-//require("./app/routes/tutorial.routes.js")(app);
+require("./app/routes/todos.routes.js")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 2590;
