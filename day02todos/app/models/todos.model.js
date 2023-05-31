@@ -2,9 +2,9 @@ const sql = require("./db.js");
 
 // constructor
 const ToDos = function(todos) {
-  this.title = todos.title;
-  this.description = todos.description;
-  this.published = todos.published;
+  this.task = todos.task;
+  this.dueDate = todos.dueDate;
+  this.isDone = todos.isDone;
 };
 
 //create a todo
