@@ -57,7 +57,7 @@ ToDoclass.getAll = (task, result) => {
       return;
     }
 
-    console.log("ToDos: ", res);
+    //console.log("ToDos: ", res);
     result(null, res);
   });
 };

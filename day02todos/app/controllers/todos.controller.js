@@ -2,35 +2,38 @@ const ToDoclass = require("../models/todos.model");
 
 //Create and Save a new Todo
 exports.create = (req, res) => {
+
+
     // Validate request
     if (!req.body) {
         res.status(400).send({
             message: "Content can not be empty!"
         });
     }
+    console.log('func: ', isValid(req, res));
+    if (isValid(req, res)) {
+        // Create a Todo
+        const todo = new ToDoclass({
+            task: req.body.task,
+            dueDate: req.body.dueDate,
+            isDone: req.body.isDone || 'Pending'
+        });
 
-    // Create a Todo
-    const todo = new ToDoclass({
-        task: req.body.task,
-        dueDate: req.body.dueDate,
-        isDone: req.body.isDone || 'Pending'
-    });
-
-    // Save Tutorial in the database
-    ToDoclass.create(todo, (err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating the Tutorial."
-            });
-        else res.status(201).send(data);
-    });
+        // Save ToDo in the database
+        ToDoclass.create(todo, (err, data) => {
+            if (err)
+                res.status(500).send({
+                    message:
+                        err.message || "Some error occurred while creating the ToDo."
+                });
+            else res.status(201).send(data);
+        });
+    }
 };
 
 // Retrieve all Todos from the database (with condition).
 exports.findAll = (req, res) => {
 
-    
     const task = req.query.task;
 
     ToDoclass.getAll(task, (err, data) => {
@@ -85,7 +88,7 @@ exports.update = (req, res) => {
                         message: "Error updating ToDo with id " + req.params.id
                     });
                 }
-            } else res.status(200).send(data);
+            } else res.status(200).send({ message: data.id === req.params.id ? true : false });
         }
     );
 };
@@ -103,6 +106,34 @@ exports.delete = (req, res) => {
                     message: "Could not delete ToDo with id " + req.params.id
                 });
             }
-        } else res.status(200).send({ message: `ToDo was deleted successfully!` });
+        } else res.status(200).send({ message: true });
     });
 };
+
+function isValid(req, res) {
+    var year = req.body.dueDate.slice(0, 4);
+
+    console.log(req.body.isDone);
+    console.log(req.body.isDone != "Done");
+    console.log(req.body.isDone != "Pending");
+    if (req.body.id) {
+        res.status(400).send({ message: "id is provided by System!!! ToDo not saved ;)" });
+        return false;
+    }
+    if (req.body.task.length < 1 || req.body.task.length > 100) {
+        res.status(400).send({ message: "too big/small task! need help? task not saved!!" });
+        return false;
+    }
+    if (year < 1900 || year > 2099) {
+        res.status(400).send({ message: "Not in the correct year range!!" });
+        return false;
+
+    }
+    if (req.body.isDone != "Pending" && req.body.isDone !== "Done") {
+        res.status(400).send({ message: "Not supported value in Is done ;)" });
+        return false;
+
+    }
+    return true;
+
+}
