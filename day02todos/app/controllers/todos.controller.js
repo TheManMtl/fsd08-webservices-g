@@ -8,14 +8,14 @@ exports.create = (req, res) => {
     }
 
     // Create a Todo
-    const todo = new ToDo({
+    const todo = new ToDoclass({
         task: req.body.task,
         dueDate: req.body.dueDate,
         isDone: req.body.isDone || 'Pending'
     });
 
     // Save Tutorial in the database
-    ToDo.create(todo, (err, data) => {
+    ToDoclass.create(todo, (err, data) => {
         if (err)
             res.status(500).send({
                 message:
@@ -29,7 +29,7 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     const task = req.query.task;
 
-    ToDo.getAll(task, (err, data) => {
+    ToDoclass.getAll(task, (err, data) => {
         if (err)
             res.status(500).send({
                 message:
@@ -41,7 +41,7 @@ exports.findAll = (req, res) => {
 
 //Find a single todo by the id
 exports.findOne = (req, res) => {
-    ToDo.findById(req.params.id, (err, data) => {
+    ToDoclass.findById(req.params.id, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
@@ -67,7 +67,7 @@ exports.update = (req, res) => {
 
     console.log(req.body);
 
-    ToDo.updateById(
+    ToDoclass.updateById(
         req.params.id,
         new ToDo(req.body),
         (err, data) => {
@@ -88,7 +88,7 @@ exports.update = (req, res) => {
 
 //Delete a Todo with id
 exports.delete = (req, res) => {
-    ToDo.remove(req.params.id, (err, data) => {
+    ToDoclass.remove(req.params.id, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.body(false).status(404).send({

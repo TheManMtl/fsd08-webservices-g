@@ -18,5 +18,5 @@ module.exports = app => {
     // Delete a ToDo with id
     router.delete("/:id", todos.delete);
   
-    app.use('/api/ToDos', router);
+    app.use('/api/todos', router);
   };

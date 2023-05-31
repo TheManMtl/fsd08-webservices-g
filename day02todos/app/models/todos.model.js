@@ -1,14 +1,14 @@
 const sql = require("./db.js");
 
 // constructor
-const ToDos = function(todos) {
+const ToDoclass = function(todos) {
   this.task = todos.task;
   this.dueDate = todos.dueDate;
   this.isDone = todos.isDone;
 };
 
 //create a todo
-ToDos.create = (newToDos, result) => {
+ToDoclass.create = (newToDos, result) => {
   sql.query("INSERT INTO todos SET ?", newToDos, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -23,7 +23,7 @@ ToDos.create = (newToDos, result) => {
 
 
 //return one todo by id
-ToDos.findById = (id, result) => {
+ToDoclass.findById = (id, result) => {
   sql.query(`SELECT * FROM todos WHERE id = ${id}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -43,7 +43,7 @@ ToDos.findById = (id, result) => {
 };
 
 // return all todo[serach by task and return all if any]
-ToDos.getAll = (task, result) => {
+ToDoclass.getAll = (task, result) => {
   let query = "SELECT * FROM tutorials";
 
   if (task) {
@@ -63,7 +63,7 @@ ToDos.getAll = (task, result) => {
 };
 
 //update a todo 
-ToDos.updateById = (id, todo, result) => {
+ToDoclass.updateById = (id, todo, result) => {
   sql.query(
     "UPDATE tutorials SET task = ?, dueDate = ?, isDone = ? WHERE id = ?",
     [todo.task, todo.dueDate, todo.isDone, id],
@@ -88,7 +88,7 @@ ToDos.updateById = (id, todo, result) => {
 
 
 //delete a todo
-ToDos.remove = (id, result) => {
+ToDoclass.remove = (id, result) => {
   sql.query("DELETE FROM todos WHERE id = ?", id, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -108,4 +108,4 @@ ToDos.remove = (id, result) => {
 };
 
 
-module.exports = ToDos;
+module.exports = ToDoclass;
