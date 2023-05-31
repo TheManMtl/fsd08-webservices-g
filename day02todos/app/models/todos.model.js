@@ -1,7 +1,7 @@
 const sql = require("./db.js");
 
 // constructor
-const ToDoclass = function(todos) {
+const ToDoclass = function (todos) {
   this.task = todos.task;
   this.dueDate = todos.dueDate;
   this.isDone = todos.isDone;
@@ -73,7 +73,7 @@ ToDoclass.updateById = (id, todo, result) => {
         result(null, err);
         return;
       }
-
+      //problem affectedRows
       if (res.affectedRows == 0) {
         // not found todo with the id
         result({ kind: "not_found" }, null);

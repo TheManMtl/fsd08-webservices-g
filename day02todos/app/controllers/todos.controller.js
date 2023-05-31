@@ -3,15 +3,15 @@ const ToDoclass = require("../models/todos.model");
 //Create and Save a new Todo
 exports.create = (req, res) => {
 
-
     // Validate request
-    if (!req.body) {
+   /*  if (!req.body) {
         res.status(400).send({
             message: "Content can not be empty!"
         });
-    }
-    console.log('func: ', isValid(req, res));
-    if (isValid(req, res)) {
+    } */
+
+    var isValidResult = isValid(req, res);
+    if (isValidResult === true) {
         // Create a Todo
         const todo = new ToDoclass({
             task: req.body.task,
@@ -28,7 +28,7 @@ exports.create = (req, res) => {
                 });
             else res.status(201).send(data);
         });
-    }
+    } 
 };
 
 // Retrieve all Todos from the database (with condition).
@@ -66,31 +66,36 @@ exports.findOne = (req, res) => {
 //Update a Todo by id
 exports.update = (req, res) => {
     // Validate Request
-    if (!req.body) {
+    /* if (!req.body) {
         res.status(400).send({
             message: "Content can not be empty!"
         });
     }
-
+ */
     console.log(req.body);
 
-    ToDoclass.updateById(
-        req.params.id,
-        new ToDoclass(req.body),
-        (err, data) => {
-            if (err) {
-                if (err.kind === "not_found") {
-                    res.status(404).send({
-                        message: `Not found ToDo with id ${req.params.id}.`
-                    });
-                } else {
-                    res.status(500).send({
-                        message: "Error updating ToDo with id " + req.params.id
-                    });
-                }
-            } else res.status(200).send({ message: data.id === req.params.id ? true : false });
-        }
-    );
+    //record need to be exists(404) -->record not found
+    if (isValid(req, res)) {
+        ToDoclass.updateById(
+            req.params.id,
+            new ToDoclass(req.body),
+            (err, data) => {
+                if (err) {
+                    if (err.kind === "not_found") {
+                        res.status(404).send({
+                            message: `Not found ToDo with id ${req.params.id}.`
+                        });
+                    } else {
+                        res.status(500).send({
+                            message: "Error updating ToDo with id " + req.params.id
+                        });
+                    }
+                } else res.status(200).send(true);
+            }
+        );
+    }
+
+
 };
 
 //Delete a Todo with id
@@ -111,13 +116,16 @@ exports.delete = (req, res) => {
 };
 
 function isValid(req, res) {
+
     var year = req.body.dueDate.slice(0, 4);
 
-    console.log(req.body.isDone);
-    console.log(req.body.isDone != "Done");
-    console.log(req.body.isDone != "Pending");
+    //console.log("isValid: ",res);
     if (req.body.id) {
-        res.status(400).send({ message: "id is provided by System!!! ToDo not saved ;)" });
+        res.status(400).send({
+            message: "id is provided by System!!! ToDo not saved ;)",
+            result: false
+        });
+        //console.log("if cond: ",res.send.result);
         return false;
     }
     if (req.body.task.length < 1 || req.body.task.length > 100) {
