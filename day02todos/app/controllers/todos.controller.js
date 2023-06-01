@@ -1,21 +1,25 @@
 const ToDoclass = require("../models/todos.model");
+const DateTimeLuxon = require("luxon");
 
 //Create and Save a new Todo
 exports.create = (req, res) => {
 
     // Validate request
-   /*  if (!req.body) {
-        res.status(400).send({
-            message: "Content can not be empty!"
-        });
-    } */
+    /*  if (!req.body) {
+         res.status(400).send({
+             message: "Content can not be empty!"
+         });
+     } */
 
     var isValidResult = isValid(req, res);
     if (isValidResult === true) {
+        //parese date to (yyyy-MM-dd)
+        var dtParsed = DateTimeLuxon.DateTime.fromISO(req.body.dueDate).toFormat('yyyy-MM-dd');
+
         // Create a Todo
         const todo = new ToDoclass({
             task: req.body.task,
-            dueDate: req.body.dueDate,
+            dueDate: dtParsed,
             isDone: req.body.isDone || 'Pending'
         });
 
@@ -28,7 +32,7 @@ exports.create = (req, res) => {
                 });
             else res.status(201).send(data);
         });
-    } 
+    }
 };
 
 // Retrieve all Todos from the database (with condition).
@@ -117,9 +121,18 @@ exports.delete = (req, res) => {
 
 function isValid(req, res) {
 
-    var isDoneEnum=['Pending','Done'];
+    var isDoneEnum = ['Pending', 'Done'];
 
-    var year = req.body.dueDate.slice(0, 4);
+    var dt = DateTimeLuxon.DateTime.fromISO(req.body.dueDate);
+
+    var dtYear = dt.year;
+
+    //validate body
+    if (!req.body) {
+        res.status(400).send({
+            message: "Content can not be empty!"
+        });
+    }
 
     //console.log("isValid: ",res);
     if (req.body.id) {
@@ -134,7 +147,7 @@ function isValid(req, res) {
         res.status(400).send({ message: "too big/small task! need help? task not saved!!" });
         return false;
     }
-    if (year < 1900 || year > 2099) {
+    if (!dt.isValid || dtYear < 1900 || dtYear > 2099) {
         res.status(400).send({ message: "Not in the correct year range!!" });
         return false;
 
