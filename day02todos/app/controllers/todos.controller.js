@@ -35,10 +35,20 @@ exports.create = (req, res) => {
     }
 };
 
+function formatDate(date, format) {
+    const map = {
+        mm: (date.getMonth() + 1).toString().padStart(2, '0'),
+        dd: date.getDate(),
+        yy: date.getFullYear()
+    }
+
+    return format.replace(/mm|dd|yy|yyy/gi, matched => map[matched])
+}
+
 // Retrieve all Todos from the database (with condition).
 exports.findAll = (req, res) => {
 
-    const task = req.query.task;
+    const task = req.query.sortElem;
 
     ToDoclass.getAll(task, (err, data) => {
         if (err)
@@ -46,9 +56,22 @@ exports.findAll = (req, res) => {
                 message:
                     err.message || "Some error occurred while retrieving todos."
             });
-        else res.status(200).send(data);
+        else {
+
+            for (const key in data) {
+
+                data[key]['parsedDate'] = formatDate(data[key]['dueDate'], 'yy-mm-dd')
+            }
+
+            res.status(200).send(data);
+
+
+        }
+
     });
 };
+
+
 
 //Find a single todo by the id
 exports.findOne = (req, res) => {
@@ -63,7 +86,13 @@ exports.findOne = (req, res) => {
                     message: "Error retrieving ToDo with id " + req.params.id
                 });
             }
-        } else res.status(200).send(data);
+        } else {
+
+
+            data['parsedDate'] = formatDate(data['dueDate'], 'yy-mm-dd');
+
+            res.status(200).send(data);
+        }
     });
 };
 
@@ -159,3 +188,4 @@ function isValid(req, res) {
     return true;
 
 }
+

@@ -8,6 +8,8 @@ module.exports = app => {
   
     // Retrieve all ToDos
     router.get("/", todos.findAll);
+
+    //router.get("/", todos.sortByTask);
   
     // Retrieve a single ToDos with id
     router.get("/:id", todos.findOne);

@@ -42,25 +42,7 @@ ToDoclass.findById = (id, result) => {
   });
 };
 
-// return all todo[serach by task and return all if any]
-ToDoclass.getAll = (task, result) => {
-  let query = "SELECT * FROM todos";
 
-  if (task) {
-    query += ` WHERE task LIKE '%${task}%'`;
-  }
-
-  sql.query(query, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-
-    //console.log("ToDos: ", res);
-    result(null, res);
-  });
-};
 
 //update a todo 
 ToDoclass.updateById = (id, todo, result) => {
@@ -107,5 +89,31 @@ ToDoclass.remove = (id, result) => {
   });
 };
 
+
+// return all todo[serach by task and return all if any]
+ToDoclass.getAll = (task, result) => {
+  let query = "SELECT * FROM todos";
+  console.log("query:", task);
+  if(task === "done") {
+    query += ` ORDER BY ${task}`;
+  }else if(task === "dt") {
+    query += ` ORDER BY ${task}`;
+  }else if (task === "task") {
+    query += ` ORDER BY ${task}`;
+  } else if (task) {
+    query += ` WHERE task LIKE '%${task}%'`;
+  }
+
+  sql.query(query, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    //console.log("ToDos: ", res);
+    result(null, res);
+  });
+};
 
 module.exports = ToDoclass;
