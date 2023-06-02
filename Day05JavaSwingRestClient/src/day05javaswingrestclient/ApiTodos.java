@@ -40,7 +40,9 @@ public class ApiTodos {
         }
     }
 
+    
     public Todo getById(int id) throws ApiErrorException {
+        //TODO select from list fill the fields on window
         try {
             URL url = new URL(BASE_URL + "/" + id);
             connect("GET", url);
@@ -58,8 +60,8 @@ public class ApiTodos {
         //throw new RuntimeException("Not implemented");
         try {
             URL url = new URL(BASE_URL + "/todos"); // ex
-            System.out.println("return addNew: "+sendJson(todo, connect("POST", url)));
-            return 0l;//sendJson(todo, connect("POST", url));
+           
+            return sendJson(todo, connect("POST", url));
         } catch (IOException e) {
             throw new ApiErrorException(e);
         }
