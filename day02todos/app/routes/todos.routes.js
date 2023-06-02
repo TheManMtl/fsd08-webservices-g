@@ -12,13 +12,13 @@ module.exports = app => {
     //router.get("/", todos.sortByTask);
   
     // Retrieve a single ToDos with id
-    router.get("/:id", todos.findOne);
+    router.get("/:id([0-9]+)", todos.findOne);
   
     // Update a ToDo with id
-    router.put("/:id", todos.update);
+    router.put("/:id([0-9]+)", todos.update);
   
     // Delete a ToDo with id
-    router.delete("/:id", todos.delete);
+    router.delete("/:id([0-9]+)", todos.delete);
   
     app.use('/api/todos', router);
   };

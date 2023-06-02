@@ -1,4 +1,4 @@
-var selectedId;
+var selectedId = 0;
 var table;
 var returnedId;
 
@@ -25,22 +25,28 @@ function showAddEditPane() {
 }
 
 
-
 function hideShowEditPane() {
     $("#viewAddEditPane").hide(); // hide add/edit pane
 }
+
+
 //retrieve data from db to html table
-function refreshTodoList() {
+function refreshTodoList(sortOrder) {
+
+    let url = (sortOrder === undefined) ? "/api/todos" : "/api/todos?sort=" + sortOrder
     $.ajax({
-        url: "/api/todos",
+        url: url,
         type: "GET",
         dataType: "json",
         error: function (jqxhr, status, errorThrown) {
             alert("AJAX error: " + jqxhr.responseText);
         }
     }).done((todoList) => {
-        var result = '<tr><th>#</th><th onclick="sortByTask(task)">Task</th>' +
-            '<th onclick="sortByTask(dt)>Due date</th><th onclick="sortByTask(done)>Done?</th></tr>';
+        var thId = `<th onclick="refreshTodoList('id')">#</th>`;
+        var thTask = `<th onclick="refreshTodoList('task')">Task</th>`;
+        var thDueDate = `<th onclick="refreshTodoList('dueDate')">Due date</th>`;
+        var thIsDone = `<th onclick="refreshTodoList('isDone')">Done?</th></tr>`;
+        var result = `<tr>${thId}${thTask}${thDueDate}${thIsDone}</tr>`;
         for (var i = 0; i < todoList.length; i++) {
             var todo = todoList[i];
 
@@ -55,6 +61,7 @@ function refreshTodoList() {
         table = result;
     })
 }
+
 
 //delete by selecting a row
 function deleteById() {
@@ -75,10 +82,15 @@ function deleteById() {
             $("#res").html(result);
 
             refreshTodoList();
+            selectedId = 0;
+            $("#currentId").text(selectedId);
+            $('#date-input').val('');
+            $('#task').val('');
+            $('#isDone').attr('checked',false);
         })
     } else {
-        var result = '<p id="res" onclick="deleteHide()">  No row is selected</p>';
-
+        var result = '<div class"row"> <p class="col-12 text-center" id="res" onclick="deleteHide()">  No row is selected</p></div>';
+       
         $("#res").html(result);
     }
 }
@@ -93,6 +105,7 @@ function selectItem(id) {
 
 }
 
+
 function findOneById(id) {
 
     $.ajax({
@@ -104,34 +117,33 @@ function findOneById(id) {
         }
 
 
-    }).done((todoList) => {
+    }).done((todo) => {
 
-        var todo = todoList;
+        var isChecked = todo.isDone == "Done" ? true : false;
 
-        var checked = todo.isDone == "Done" ? true : false;
         $('#date-input').val(todo.parsedDate);
         $('#task').val(todo.task);
-        $('#isDone').attr('checked', checked);
+        $('#isDone').attr('checked', isChecked);
 
         $('#saveOrAdd').text('Save');
-        $('#delete').prop('disabled', true);
+        //$('#delete').prop('disabled', true);
 
-        returnedId = todo.id;
     })
 
 }
 
 
-function deleteHide() {
+function resultPane() {
     var result = '<p id="res" onclick="deleteHide()"></p>';
 
     $("#res").html(result);
     $('#res').hide();
 }
 
+
 function saveOrUpdateRow() {
 
-    let saveOrUpade = selectedId !== undefined ? 'save' : 'add';
+    let saveOrUpade = selectedId !== 0 ? 'save' : 'add';
 
 
     if (saveOrUpade === 'add') {
@@ -140,6 +152,7 @@ function saveOrUpdateRow() {
         save();
     }
 }
+
 
 function add() {
     let dt = $('#date-input').val();
@@ -166,8 +179,6 @@ function add() {
 
         var todo = todoList;
 
-        //var parsedDate = new Date(todo.dueDate);
-
         table += '<tr onclick="selectItem(' + todo.id + ')">';
         table += '<td>' + todo.id + '</td>';
         table += '<td>' + todo.task + '</td>';
@@ -181,6 +192,7 @@ function add() {
 
     refreshTodoList();
 }
+
 
 function save() {
     let dt = $('#date-input').val();
@@ -206,17 +218,22 @@ function save() {
     }).done(() => {
 
         $('#viewAddEditPane').hide();
+        selectedId = 0;
     })
 
     refreshTodoList();
 }
 
-function sortByTask(type) {
+/* 
+function sort(sortOrder) {
 
-    console.log("task sort");
-    
+    console.log("task sort:", sortOrder);
+
+    let prepUrl = (sortOrder === undefined) ? "/api/todos" : "/api/todos?task=" + sortOrder
+    console.log("prepUrl: ",prepUrl);
+
     $.ajax({
-        url: "/api/todos?sortElem=" + type,
+        url: prepUrl,
         type: "GET",
         dataType: "json",
         error: function (jqxhr, status, errorThrown) {
@@ -225,11 +242,10 @@ function sortByTask(type) {
 
 
     }).done((todoList) => {
-        var result = '<tr><th>#</th><th onclick="sortByTask()">Task</th><th>Due date</th><th>Done?</th></tr>';
+        var result = `<tr><th>#</th><th onclick='sort("task")'>Task</th>` +
+            `<th onclick='sort("dueDate")'>Due date</th><th onclick='sort("isDone")'>Done?</th></tr>`;
         for (var i = 0; i < todoList.length; i++) {
             var todo = todoList[i];
-
-            //var parsedDate = new Date(todo.dueDate);
 
             result += '<tr onclick="selectItem(' + todo.id + ')">';
             result += '<td>' + todo.id + '</td>';
@@ -243,4 +259,4 @@ function sortByTask(type) {
     })
 
 
-}
+}  */

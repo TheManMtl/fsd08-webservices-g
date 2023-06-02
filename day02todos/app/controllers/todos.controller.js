@@ -38,7 +38,7 @@ exports.create = (req, res) => {
 function formatDate(date, format) {
     const map = {
         mm: (date.getMonth() + 1).toString().padStart(2, '0'),
-        dd: date.getDate(),
+        dd: date.getDate().toString().padStart(2, '0'),
         yy: date.getFullYear()
     }
 
@@ -48,26 +48,23 @@ function formatDate(date, format) {
 // Retrieve all Todos from the database (with condition).
 exports.findAll = (req, res) => {
 
-    const task = req.query.sortElem;
+    const sort = req.query.sort;
+    //const task = req.query.sort;
 
-    ToDoclass.getAll(task, (err, data) => {
+    ToDoclass.getAll(sort, (err, data) => {
         if (err)
             res.status(500).send({
                 message:
                     err.message || "Some error occurred while retrieving todos."
             });
         else {
-
+            //   console.log(data);
             for (const key in data) {
 
                 data[key]['parsedDate'] = formatDate(data[key]['dueDate'], 'yy-mm-dd')
             }
-
             res.status(200).send(data);
-
-
         }
-
     });
 };
 

@@ -1,4 +1,4 @@
-const sql = require("./db.js");
+const con = require("./db.js");
 
 // constructor
 const ToDoclass = function (todos) {
@@ -9,7 +9,7 @@ const ToDoclass = function (todos) {
 
 //create a todo
 ToDoclass.create = (newToDos, result) => {
-  sql.query("INSERT INTO todos SET ?", newToDos, (err, res) => {
+  con.query("INSERT INTO todos SET ?", newToDos, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -24,7 +24,7 @@ ToDoclass.create = (newToDos, result) => {
 
 //return one todo by id
 ToDoclass.findById = (id, result) => {
-  sql.query(`SELECT * FROM todos WHERE id = ${id}`, (err, res) => {
+  con.query(`SELECT * FROM todos WHERE id = ${id}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -46,7 +46,7 @@ ToDoclass.findById = (id, result) => {
 
 //update a todo 
 ToDoclass.updateById = (id, todo, result) => {
-  sql.query(
+  con.query(
     "UPDATE todos SET task = ?, dueDate = ?, isDone = ? WHERE id = ?",
     [todo.task, todo.dueDate, todo.isDone, id],
     (err, res) => {
@@ -71,7 +71,7 @@ ToDoclass.updateById = (id, todo, result) => {
 
 //delete a todo
 ToDoclass.remove = (id, result) => {
-  sql.query("DELETE FROM todos WHERE id = ?", id, (err, res) => {
+  con.query("DELETE FROM todos WHERE id = ?", id, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -91,24 +91,22 @@ ToDoclass.remove = (id, result) => {
 
 
 // return all todo[serach by task and return all if any]
-ToDoclass.getAll = (task, result) => {
+ToDoclass.getAll = (params, result) => {
   let query = "SELECT * FROM todos";
-  console.log("query:", task);
-  if(task === "done") {
-    query += ` ORDER BY ${task}`;
-  }else if(task === "dt") {
-    query += ` ORDER BY ${task}`;
-  }else if (task === "task") {
-    query += ` ORDER BY ${task}`;
-  } else if (task) {
-    query += ` WHERE task LIKE '%${task}%'`;
+  let vals=["task",'isDone','dueDate', 'id'];
+  var col=[params];
+  if (vals.includes(params)) {
+    query += ` ORDER BY ??`;
+  } else if (params) {
+    query += ` WHERE task LIKE '%${params}%'`;
   }
-
-  sql.query(query, (err, res) => {
+  query=con.format(query,col)
+  //console.log("query to exe:", query);
+  con.query(query, (err, res) => {
     if (err) {
-      console.log("error: ", err);
+      //console.log("error: ", err);
       result(null, err);
-      return;
+      //return;
     }
 
     //console.log("ToDos: ", res);

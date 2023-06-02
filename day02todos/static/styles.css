@@ -1,4 +1,4 @@
-body {
+/* body {
     background-color: #5f9ea0;
 }
 div {
@@ -8,16 +8,16 @@ div {
     width: 740px;
     padding: 0;
     margin: 0 auto;
-    background-color: white;
+ background-color: white; 
 }
 #listPane {
     border: darkgray 1px solid;
     width: 340px;
     display: inline-table;
-}
+} 
 #viewAddEditPane {
     border: darkgray 1px solid;
     width: 340px;
     display: inline-table;
 }
-.dueDateColumn { width: 80px; }
+.dueDateColumn { width: 80px; } */
