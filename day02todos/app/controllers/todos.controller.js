@@ -16,6 +16,7 @@ exports.create = (req, res) => {
         //parese date to (yyyy-MM-dd)
         var dtParsed = DateTimeLuxon.DateTime.fromISO(req.body.dueDate).toFormat('yyyy-MM-dd');
 
+        
         // Create a Todo
         const todo = new ToDoclass({
             task: req.body.task,
@@ -39,7 +40,7 @@ function formatDate(date, format) {
     const map = {
         mm: (date.getMonth() + 1).toString().padStart(2, '0'),
         dd: date.getDate().toString().padStart(2, '0'),
-        yy: date.getFullYear()
+        yy: date.getFullYear() 
     }
 
     return format.replace(/mm|dd|yy|yyy/gi, matched => map[matched])
@@ -150,6 +151,7 @@ function isValid(req, res) {
     var isDoneEnum = ['Pending', 'Done'];
 
     var dt = DateTimeLuxon.DateTime.fromISO(req.body.dueDate);
+    //var isDone= req.body.status;
 
     var dtYear = dt.year;
 
@@ -182,6 +184,12 @@ function isValid(req, res) {
         res.status(400).send({ message: "Not supported value in Is done ;)" });
         return false;
     }
+   /*  console.log('req.body.isDone: from java in validation controoler--> '+isDone);
+    console.log('idDone --> ', req.body.status!=='Done' );
+    if (req.body.status!=='Done' && req.body.status!=='Pending') {
+        res.status(400).send({ message: "Not supported value in Is done ;)" });
+        return false;
+    } */
     return true;
 
 }

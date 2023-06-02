@@ -9,6 +9,7 @@ const ToDoclass = function (todos) {
 
 //create a todo
 ToDoclass.create = (newToDos, result) => {
+  console.log('isDone controller: '+newToDos);
   con.query("INSERT INTO todos SET ?", newToDos, (err, res) => {
     if (err) {
       console.log("error: ", err);

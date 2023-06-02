@@ -6,7 +6,8 @@ const connection = mysql.createConnection({
   host: dbConfig.HOST,
   user: dbConfig.USER,
   password: dbConfig.PASSWORD,
-  database: dbConfig.DB
+  database: dbConfig.DB,
+ // dateStrings: true // SQL returns dates as yyyy-mm-dd instead of the ISO format
 });
 
 // open the MySQL connection

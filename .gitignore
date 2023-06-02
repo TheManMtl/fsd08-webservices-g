@@ -128,3 +128,5 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+/Day05JavaSwingRestClient/nbproject/private/
+/Day05JavaSwingRestClient/build/
