@@ -205,8 +205,8 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void lstTodosValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstTodosValueChanged
         // TODO add your handling code here:
-
-        System.out.println("New selection: " + lstTodos.getSelectedValue());
+        
+       System.out.println("New selection: " + lstTodos.getSelectedValue());
     }//GEN-LAST:event_lstTodosValueChanged
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
