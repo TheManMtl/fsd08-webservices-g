@@ -18,5 +18,5 @@ module.exports = app => {
     // Delete an airport with code
     router.delete("/:code([a-zA-z0-9]+)", airport.delete);
     
-    app.use('/api/airport', router);
+    app.use('/api/airports', router);
   };

@@ -6,10 +6,10 @@ exports.create = (req, res) => {
     //if all validation passes true otherwise false
     if (isValid(req, res)) {
 
-        
+
         // Create a Airport obj
         const airport = new Airport({
-            code: req.body.code,
+            code: req.body.code.toUpperCase(),
             city: req.body.city,
             latitude: req.body.latitude,
             longitude: req.body.longitude,
@@ -25,7 +25,7 @@ exports.create = (req, res) => {
             "kind": "kind",
              }
         */
-
+        console.log("airport obj in creat: ", airport);
         // Save Airport in the database
         Airport.create(airport, (err, data) => {
             if (err)
@@ -142,14 +142,14 @@ exports.delete = (req, res) => {
 */
 //validation controller
 function isValid(req, res) {
-
+    let codeRegex = /^[a-zA-Z]+$/
     let code = req.body.code;
     let city = req.body.city;
 
     //TOFIX: in case no validation delete the variable
-    // let latitude = req.body.latitude;
-    // let longitude = req.body.longitude;
-     let kind = req.body.kind;
+    let latitude = req.body.latitude;
+    let longitude = req.body.longitude;
+    let kind = req.body.kind;
 
     var kindList = ['Passenger', 'Cargo', 'Military', 'Private'];
 
@@ -158,30 +158,47 @@ function isValid(req, res) {
         res.status(400).send({
             message: "Content can not be empty!"
         });
+        return false;
     }
-
     //code ONLY chars
-    if (!isNaN(code)) {
+    if (!isNaN(code) || !codeRegex.test(code)) {
         res.status(400).send({
-            message: "code must be only charachter!!! Airport not saved ;)"
+            message: "code must be only charachter!!! action not completed ;)"
         });
         return false;
     }
     //code ONLY 3-6 letters
     if (code.length < 3 || code.length > 6) {
         res.status(400).send({
-            message: "code must be 3-6 charachter!!! Airport not saved ;)"  
+            message: "code must be 3-6 charachter!!! action not completed ;)"
         });
         return false;
     }
 
-    if(!kindList.includes(kind)){
+    if (!kindList.includes(kind)) {
         res.status(400).send({
-            message: "No such type of airplane!!! Airport not Updated ;)"  
+            message: "No such type of airplane!!! action not completed"
         });
         return false;
     }
 
+    // latitude -90 to 90,
+    // longitude -180 to 180
+    console.log("atitude -90 to 90: ", latitude < -90)
+
+    if (latitude < -90 || latitude > 90 && longitude < -180 || longitude > 180) {
+        res.status(400).send({
+            message: "No such location!!! action not completed!!"
+        });
+        return false;
+    }
+
+    if(city.length<1 || city.lenght>40){
+        res.status(400).send({
+            message: "city is too short or too long!!! action not completed!!"
+        });
+        return false;
+    }
     //FIXME: validation duplicate city
     //city cannot be duplicated
     //if (city_exists.err == `city name  ${req.params.city} already exists.` || req.body.data) return false;
