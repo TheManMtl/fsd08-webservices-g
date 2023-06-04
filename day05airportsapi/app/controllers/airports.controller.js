@@ -56,6 +56,68 @@ exports.findAll = (req, res) => {
     });
 };
 
+//Find a single airport by code
+exports.findOne = (req, res) => {
+    Airport.findByCode(req.params.code, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found ToDo with code ${req.params.code}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving airport with code " + req.params.code
+                });
+            }
+        } else {
+            res.status(200).send(data);
+        }
+    });
+};
+
+
+//Update an airport by code
+exports.update = (req, res) => {
+
+    //record need to be exists(404) -->record not found
+    if (isValid(req, res)) {
+        Airport.updateByCode(
+            req.params.code,
+            new Airport(req.body),
+            (err, data) => {
+                if (err) {
+                    if (err.kind === "not_found") {
+                        res.status(404).send({
+                            message: `Not found airport with code ${req.params.code}.`
+                        });
+                    } else {
+                        res.status(500).send({
+                            message: "Error updating airport with id " + req.params.code
+                        });
+                    }
+                } else res.status(200).send(data);
+            }
+        );
+    }
+};
+
+
+//Delete a Todo with id
+exports.delete = (req, res) => {
+    Airport.remove(req.params.code, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found airport with code ${req.params.code}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Could not delete airport with id " + req.params.code
+                });
+            }
+        } else res.status(200).send(data);
+    });
+};
 
 //FIXEME: TO RETURN IF THE CITY EXISTS
 /* var city_exists = (req, res) => {
@@ -87,7 +149,7 @@ function isValid(req, res) {
     //TOFIX: in case no validation delete the variable
     // let latitude = req.body.latitude;
     // let longitude = req.body.longitude;
-    // let kind = req.body.kind;
+     let kind = req.body.kind;
 
     var kindList = ['Passenger', 'Cargo', 'Military', 'Private'];
 
@@ -109,6 +171,13 @@ function isValid(req, res) {
     if (code.length < 3 || code.length > 6) {
         res.status(400).send({
             message: "code must be 3-6 charachter!!! Airport not saved ;)"  
+        });
+        return false;
+    }
+
+    if(!kindList.includes(kind)){
+        res.status(400).send({
+            message: "No such type of airplane!!! Airport not Updated ;)"  
         });
         return false;
     }

@@ -1,9 +1,8 @@
 //create <<
 //getAll <<
 //getByCode <<
-//update
-//delete
-//
+//update <<
+//delete <<
 
 const conDb = require("./db.js");
 
@@ -16,7 +15,7 @@ const Airports = function (airports) {
     this.kind = airports.kind;
 };
 
-//create a todo
+//create a airport
 Airports.create = (newAirprt, result) => {
 
     conDb.query("INSERT INTO airports SET ?", newAirprt, (err, res) => {
@@ -30,7 +29,89 @@ Airports.create = (newAirprt, result) => {
 };
 
 
-//return one todo by city
+
+
+//return one airport by code
+Airports.findByCode = (code, result) => {
+    conDb.query(`SELECT * FROM airports WHERE code = ?`, [code], (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+
+        if (res.length) {
+            console.log("found airport: ", res[0]);
+            result(null, res[0]);
+            return;
+        }
+
+        // not found airport with the code
+        result({ kind: "not_found" }, null);
+    });
+};
+
+//update an airport 
+Airports.updateByCode = (code, airport, result) => {
+    conDb.query(
+        "UPDATE airports SET city = ?, latitude = ?, longitude = ?, kind = ? WHERE code = ?",
+        [airport.city, airport.latitude, airport.longitude, airport.kind, code],
+        (err, res) => {
+            if (err) {
+                console.log("error: ", err);
+                result(null, err);
+                return;
+            }
+            //FIXME: affectedRows is not the ideal solution
+            if (res.affectedRows == 0) {
+                // not found airport with the code
+                result({ kind: "not_found" }, null);
+                return;
+            }
+
+            console.log("updated airport: ", { code: code, ...airport });
+            result(null, { code: code, ...airport });
+        }
+    );
+};
+
+
+//delete an airport
+Airports.remove = (code, result) => {
+    conDb.query("DELETE FROM airports WHERE code = ?", code, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+        if (res.affectedRows == 0) {
+            // not found airport with the code
+            result({ kind: "not_found" }, null);
+            return;
+        }
+        console.log("airport deleted successfully with code: ", code);
+        result(null, res);
+    });
+};
+
+
+// return all airports[default sort by code]
+Airports.getAll = (sortOrder, result) => {
+    console.log("sort: " + sortOrder);
+    var query = conDb.format("SELECT * FROM airports ORDER BY ?? ASC", sortOrder);
+
+    //console.log("query to exe:", query);
+    conDb.query(query, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+        result(null, res);
+    });
+};
+
+//return one airport by city
 //FIXME: NOT WORKING
 Airports.isCityExists = (city, result) => {
     console.log("UU are here!");
@@ -47,90 +128,8 @@ Airports.isCityExists = (city, result) => {
             return;
         }
 
-        // not found airport with the id
+        // not found airport with the code
         result({ available: "already_exists" }, null);
-    });
-};
-
-//return one airport by code
-ToDoclass.findById = (id, result) => {
-    con.query(`SELECT * FROM todos WHERE id = ${id}`, (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(err, null);
-        return;
-      }
-  
-      if (res.length) {
-        console.log("found todos: ", res[0]);
-        result(null, res[0]);
-        return;
-      }
-  
-      // not found ToDO with the id
-      result({ kind: "not_found" }, null);
-    });
-  };
-/* 
-//update a airpor 
-Airports.updateById = (id, todo, result) => {
-  conDb.query(
-    "UPDATE todos SET task = ?, dueDate = ?, isDone = ? WHERE id = ?",
-    [todo.task, todo.dueDate, todo.isDone, id],
-    (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(null, err);
-        return;
-      }
-      //problem affectedRows
-      if (res.affectedRows == 0) {
-        // not found todo with the id
-        result({ kind: "not_found" }, null);
-        return;
-      }
-
-      console.log("updated todo: ", { id: id, ...todo });
-      result(null, { id: id, ...todo });
-    }
-  );
-};
-
-
-//delete a todo
-Airports.remove = (id, result) => {
-  conDb.query("DELETE FROM todos WHERE id = ?", id, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-
-    if (res.affectedRows == 0) {
-      // not found todo with the id
-      result({ kind: "not_found" }, null);
-      return;
-    }
-
-    console.log("deleted todo with id: ", id);
-    result(null, res);
-  });
-};
- */
-
-// return all todo[default sort by code]
-Airports.getAll = (sortOrder, result) => {
-    console.log("sort: " + sortOrder);
-    var query = conDb.format("SELECT * FROM airports ORDER BY ??", sortOrder);
-
-    //console.log("query to exe:", query);
-    conDb.query(query, (err, res) => {
-        if (err) {
-            console.log("error: ", err);
-            result(null, err);
-            return;
-        }
-        result(null, res);
     });
 };
 

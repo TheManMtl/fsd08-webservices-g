@@ -10,18 +10,13 @@ module.exports = app => {
     
     router.get("/", airport.findAll);
 
-    //router.get("/", todos.sortByTask);
+    router.get("/:code", airport.findOne);
   
-    // Retrieve a single airport with city
-    //router.get("/:city", airport.isCityExists);
+    // Update an airport with code
+   router.put("/:code([a-zA-z0-9]+)", airport.update);
   
-    // Update a airport with id
-    //FIXME: not implemented
-   // router.put("/:id([0-9]+)", airport.update);
-  
-    // Delete a airport with id
-    //FIXME: not implemented
-    //router.delete("/:id([0-9]+)", airport.delete);
+    // Delete an airport with code
+    router.delete("/:code([a-zA-z0-9]+)", airport.delete);
     
     app.use('/api/airport', router);
   };
