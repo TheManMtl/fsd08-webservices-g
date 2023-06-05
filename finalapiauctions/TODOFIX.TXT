@@ -1,0 +1,18 @@
+//CREATE CONTROLLER
+//TODO: create a record, make sure seller email is valid and itemDesc is 1-200 characters long.
+//TODO: itemCode is a string with length 2-20 characters made up of letters, digits, dashes, dots or spaces.
+//If an item with such itemCode already exists API must return 409 (conflict) code with error explanation in the body.
+
+
+//UPDATE CONTROLLER
+//The server must verify that the new lastBid is higher than the existing lastBid (if not it rejects the bid with 400 http code)
+//The server must verify that lastBidderEmail is a valid email. If it is not then a 400 error is generated and the new bid is rejected.
+//In both cases of 400 error message with the case needs to be provided in the body and shown to the user on the client side.
+//If the new lastBid is higher than existing lastBid then lastBid in database is updated to the new lastBid and lastBidderEmail is also updated.
+
+
+// UPDATE ROUTER
+//The id in the URL must be numerical.
+
+//Note: every operation that modifes the database (so not GET) must be *logged* using npmlog.
+//Every log entry must also include client's IP address (try: const ipAddress = req.socket.remoteAddress;  )
