@@ -404,7 +404,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void lstAirportsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstAirportsMouseClicked
         String[] rowItems = lstAirports.getSelectedValue().split("\\s+");
-
+           //FIXME: use api findone
         tfCode.setText(rowItems[0]);
         tfCity.setText(rowItems[2]);
         tfLatitude.setText(rowItems[4]);

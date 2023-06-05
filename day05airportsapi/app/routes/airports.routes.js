@@ -2,7 +2,7 @@ module.exports = app => {
     const airport = require("../controllers/airports.controller.js");
   
     var router = require("express").Router();
-    var mapRouter=require("express").Router();
+    //var mapRouter=require("express").Router();
   
     // Create a new airport
     router.post("/", airport.create);
@@ -11,7 +11,7 @@ module.exports = app => {
     
     router.get("/", airport.findAll);
 
-    mapRouter.get("/map",airport.findAllCoordinates);
+   // mapRouter.get("/map",airport.findAllCoordinates);
 
     router.get("/:code", airport.findOne);
   
@@ -22,7 +22,7 @@ module.exports = app => {
     router.delete("/:code([a-zA-z0-9]+)", airport.delete);
 
     
-    app.use('api/maps',mapRouter)
+    //app.use('api/maps',mapRouter)
     
     app.use('/api/airports', router);
   };

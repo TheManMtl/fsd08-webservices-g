@@ -15,8 +15,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
         integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
         crossorigin="anonymous"></script>
-    <script src="index.js"></script> 
-   
+    <script src="index.js"></script>
+
     <title>ToDos | HOME</title>
 </head>
 
@@ -25,9 +25,9 @@
         <div id="res"></div>
         <div id="listPane">
             <div class="col-12 text-center m-4">
-            <button class="btn btn-lg shadow rounded btn-warning" id="showAddItem">Add item</button>
-        </div>
-        <hr>
+                <button class="btn btn-lg shadow rounded btn-warning" id="showAddItem">Add item</button>
+            </div>
+            <hr>
             <div class="container">
                 <div class="row">
                     <div class="col-6">
@@ -37,38 +37,61 @@
                     </div>
                     <div class="col-4">
                         <div class=" form-control" id="viewAddEditPane">
-                            
+
                             <div class="input-group mb-3">
-                                <span class="input-group-text" >Current ID: </span>
-                                <span class="input-group-text" id="currentId">0</span>
-                              </div>
+                                <span class="input-group-text">Current CODE: </span>
+                                <span class="input-group-text" id="currCode">0</span>
+                            </div>
                             <div class="input-group mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-default">Task</span>
-                                <input id="task" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                              </div>
-                            <!-- Task: <input class="form-control" id="task" type="text" name="task"> -->
+                                <span class="input-group-text" id="inputGroup-sizing-default">City</span>
+                                <input id="city" type="text" class="form-control" aria-label="Sizing example input"
+                                    aria-describedby="inputGroup-sizing-default">
+                            </div>
+
                             <br>
                             <div class="input-group mb-3">
-                                <span class="input-group-text" id="inputGroup-sizing-default">Due date:</span>
-                                <input id="date-input" type="date" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-                              </div>
-                            <!-- Due date: <input id="date-input" class="form-control" type="date" name="dueDate"><br> -->
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" id="isDone">
-                                <label class="form-check-label" for="isDone">Default switch checkbox input</label>
-                              </div>
-                            <!-- Is done: <input id="isDone" type="checkbox" name="isDone"><br> -->
-
-                            <div class="row mb-3">
-                                <div class="col-12 text-center">
-                                <button class="btn btn-success btn-sm" id="saveOrAdd">Save or Add</button>
-                                <button class="btn btn-danger btn-sm" id="delete">Delete</button>
-                                <button class="btn btn-dark btn-sm" id="cancel" onclick="hideShowEditPane()" >Cancel</button>
+                                <span class="input-group-text" id="inputGroup-sizing-default">Lat</span>
+                                <input id="lat" type="text" class="form-control" aria-label="Sizing example input"
+                                    aria-describedby="inputGroup-sizing-default">
                             </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-default">Lon</span>
+                                <input id="lon" type="text" class="form-control" aria-label="Sizing example input"
+                                    aria-describedby="inputGroup-sizing-default">
+                            </div>
+                            
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="inputGroup-sizing-default">Kind</span>
+                                <input id="kind" type="text" class="form-control" aria-label="Sizing example input"
+                                    aria-describedby="inputGroup-sizing-default">
+                            </div>
+
+
+                            <!-- FIXME: dropdown not implemented -->
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Dropdown
+                                </button>
+                                <div class="dropdown-menu mb-3" aria-labelledby="dropdownMenu2">
+                                    <button class="dropdown-item" type="button">Action</button>
+                                    <button class="dropdown-item" type="button">Another action</button>
+                                    <button class="dropdown-item" type="button">Something else here</button>
+                                </div>
+                            </div>
+
+
+                            <div class="row mb-3 mt-3">
+                                <div class="col-12 text-center">
+                                    <button class="btn btn-success btn-sm" id="saveOrAdd">Save or Add</button>
+                                    <button class="btn btn-danger btn-sm" id="delete">Delete</button>
+                                    <button class="btn btn-dark btn-sm" id="cancel"
+                                        onclick="hideShowEditPane()">Cancel</button>
+                                </div>
                                 <!-- <button id="saveOrAdd">Save or Add</button> -->
                                 <!-- <button id="delete">Delete</button>
                                 <button id="cancel" onclick="hideShowEditPane()">Cancel</button> -->
-                              </div>
+                            </div>
                             <!-- <button id="saveOrAdd">Save or Add</button>
                             <button id="delete">Delete</button>
                             <button id="cancel" onclick="hideShowEditPane()">Cancel</button> -->
@@ -77,9 +100,9 @@
                 </div>
             </div>
 
-            
+
         </div>
-        
+
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"

@@ -99,7 +99,7 @@ Airports.remove = (code, result) => {
 Airports.getAll = (sortOrder, result) => {
 
     
-    let sorts = ['code', 'city', 'kink'];
+    //let sorts = ['code', 'city', 'kink'];
 
     //sort by kind is a enum needs a different query
     let flag = sortOrder === "kind" ? 'CAST(?? AS CHAR)' : ' ??';
