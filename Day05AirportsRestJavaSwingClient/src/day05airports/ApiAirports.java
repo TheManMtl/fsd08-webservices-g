@@ -30,9 +30,9 @@ public class ApiAirports {
     private final Gson gson = new GsonBuilder()
             .create();
 
-    public ArrayList<Airport> getAllAirports() throws ApiErrorException {
+    public ArrayList<Airport> getAllAirports(String sort) throws ApiErrorException {
         try {
-            URL url = new URL(BASE_URL + "/airports?sort=code");
+            URL url = new URL(BASE_URL + "/airports?sort="+sort);
             connect("GET", url);
             String jsonString = getString(url);
             //Using the GSON library parse the string straight into an arraylist of todos and return it

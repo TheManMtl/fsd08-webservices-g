@@ -31,7 +31,7 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow() {
         try {
             modelAirportList = new DefaultListModel<>();
-            list = apiAirports.getAllAirports();
+            list = apiAirports.getAllAirports("code");
             for (Airport airport : list) {
                 modelAirportList.addElement(airport.toString());
             }
@@ -73,7 +73,7 @@ public class MainWindow extends javax.swing.JFrame {
         btnFindNearest = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnSortByKind = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -150,10 +150,25 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         jButton1.setText("Sort by Code");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Sort by City");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Sort by Kind");
+        btnSortByKind.setText("Sort by Kind");
+        btnSortByKind.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSortByKindActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -168,7 +183,7 @@ public class MainWindow extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jButton2)
                         .addGap(8, 8, 8)
-                        .addComponent(jButton3)))
+                        .addComponent(btnSortByKind)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
@@ -204,7 +219,7 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(tfCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(btnSortByKind))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -293,8 +308,6 @@ public class MainWindow extends javax.swing.JFrame {
         } catch (ApiErrorException ex) {
             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
@@ -337,7 +350,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         JOptionPane.showMessageDialog(null, theList[findLowestDistance(distances)]);
         //System.out.println();
-   
+
 
     }//GEN-LAST:event_btnFindNearestActionPerformed
 
@@ -400,9 +413,43 @@ public class MainWindow extends javax.swing.JFrame {
         comboKind.setSelectedItem(kind.toString());
     }//GEN-LAST:event_lstAirportsMouseClicked
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            refreshList();
+        } catch (ApiErrorException ex) {
+            JOptionPane.showMessageDialog(null, "Fatal error: " + ex.getMessage());
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // sortByCity
+        
+        modelAirportList.removeAllElements();
+        try {
+            list = apiAirports.getAllAirports("city");
+        } catch (ApiErrorException ex) {
+            JOptionPane.showMessageDialog(null, "Fatal error: " + ex.getMessage());
+        }
+        for (Airport refresh : list) {
+            modelAirportList.addElement(refresh.toString());
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void btnSortByKindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSortByKindActionPerformed
+        modelAirportList.removeAllElements();
+        try {
+            list = apiAirports.getAllAirports("kind");
+        } catch (ApiErrorException ex) {
+            JOptionPane.showMessageDialog(null, "Fatal error: " + ex.getMessage());
+        }
+        for (Airport refresh : list) {
+            modelAirportList.addElement(refresh.toString());
+        }
+    }//GEN-LAST:event_btnSortByKindActionPerformed
+
     private void refreshList() throws ApiErrorException {
         modelAirportList.removeAllElements();
-        list = apiAirports.getAllAirports();
+        list = apiAirports.getAllAirports("code");
         for (Airport refresh : list) {
             modelAirportList.addElement(refresh.toString());
         }
@@ -461,12 +508,12 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnFindNearest;
     private javax.swing.JButton btnImport;
+    private javax.swing.JButton btnSortByKind;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JComboBox<String> comboKind;
     private javax.swing.JFileChooser fileChooser;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

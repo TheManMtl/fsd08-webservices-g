@@ -98,7 +98,10 @@ Airports.remove = (code, result) => {
 // return all airports[default sort by code]
 Airports.getAll = (sortOrder, result) => {
     //console.log("sort: " + sortOrder);
-    var query = conDb.format("SELECT * FROM airports ORDER BY ?? ASC", sortOrder);
+
+    //sort by kind is a enum needs a different query
+    let flag = sortOrder === "kind" ? 'CAST(?? AS CHAR)' : ' ??';
+    var query = conDb.format(`SELECT * FROM airports ORDER BY ${flag}  ASC`, sortOrder);
 
 
     conDb.query(query, (err, res) => {
