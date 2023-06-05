@@ -27,10 +27,9 @@ public class ApiAirports {
     private final Gson gson = new GsonBuilder()
             .create();
 
-    
     public ArrayList<Airport> getAllAirports() throws ApiErrorException {
         try {
-            URL url = new URL(BASE_URL + "/airports"); 
+            URL url = new URL(BASE_URL + "/airports?sort=code");
             connect("GET", url);
             String jsonString = getString(url);
             //Using the GSON library parse the string straight into an arraylist of todos and return it
@@ -41,8 +40,18 @@ public class ApiAirports {
             throw new ApiErrorException(e);
         }
     }
+    
+    public String addNew(Airport airport) throws ApiErrorException {
+        
+        try {
+            URL url = new URL(BASE_URL + "/airports"); // ex
+           
+            return sendJson(airport, connect("POST", url));
+        } catch (IOException e) {
+            throw new ApiErrorException(e);
+        }
+    }
 
-   
     private String sendJson(Airport airport, HttpURLConnection conn) throws IOException, ApiErrorException {
         String json = gson.toJson(airport);
         JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
@@ -119,7 +128,7 @@ public class ApiAirports {
 }
 
 
- /*
+/*
     public Todo getById(int id) throws ApiErrorException {
         //TODO select from list fill the fields on window
         try {
@@ -135,17 +144,7 @@ public class ApiAirports {
         }
     }
 
-    public long addNew(Todo todo) throws ApiErrorException {
-        //throw new RuntimeException("Not implemented");
-        try {
-            URL url = new URL(BASE_URL + "/todos"); // ex
-           
-            return sendJson(todo, connect("POST", url));
-        } catch (IOException e) {
-            throw new ApiErrorException(e);
-        }
-    }
-
+   
     public long update(Todo todo) throws ApiErrorException {
         try {
             URL url = new URL(BASE_URL + "/" + todo.id);
@@ -170,4 +169,4 @@ public class ApiAirports {
             throw new ApiErrorException(e);
         }
     }
-     */
+ */

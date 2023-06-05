@@ -4,7 +4,13 @@
  */
 package day05airports;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
@@ -13,8 +19,8 @@ import javax.swing.JOptionPane;
  * @author grego
  */
 public class MainWindow extends javax.swing.JFrame {
-    
-    DefaultListModel<String> modelTodoList;
+
+    DefaultListModel<String> modelAirportList;
     ArrayList<Airport> list;
 
     ApiAirports apiAirports = new ApiAirports();
@@ -23,19 +29,19 @@ public class MainWindow extends javax.swing.JFrame {
      * Creates new form MainWindow airport
      */
     public MainWindow() {
-//        try {
-//            modelTodoList = new DefaultListModel<>();
-//            list = apiAirports.getAllAirports();
-//            for (Airport airport : list) {
-//                modelTodoList.addElement(airport.toString());    
-//              }
-//            initComponents();
-//        } catch (ApiErrorException ex) {
-//            JOptionPane.showMessageDialog(null, "Fatal error: " + ex.getMessage());
-//            System.exit(1); // terminate abruptly
-//        }
-        
-        initComponents();
+        try {
+            modelAirportList = new DefaultListModel<>();
+            list = apiAirports.getAllAirports();
+            for (Airport airport : list) {
+                modelAirportList.addElement(airport.toString());
+            }
+
+            initComponents();
+        } catch (ApiErrorException ex) {
+            JOptionPane.showMessageDialog(null, "Fatal error: " + ex.getMessage());
+            System.exit(1); // terminate abruptly
+        }
+
     }
 
     /**
@@ -71,11 +77,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lstAirports.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "YUL in Montreal at 45.4697842 / -73.7554174, Passenger", "YYZ in Toronto at 43.6777215 / -79.6270084, Passenger", "JFK in New York JFK at 40.6413151 / -73.7803278, Passenger" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        lstAirports.setModel(modelAirportList);
         lstAirports.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 lstAirportsValueChanged(evt);
@@ -92,6 +94,8 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel4.setText("Longitude:");
 
         jLabel5.setText("Kind:");
+
+        tfCode.setPreferredSize(new java.awt.Dimension(90, 25));
 
         comboKind.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Passenger", "Cargo", "Military", "Private" }));
 
@@ -214,7 +218,7 @@ public class MainWindow extends javax.swing.JFrame {
                         .addGap(7, 7, 7)
                         .addComponent(btnImport))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -225,7 +229,31 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_lstAirportsValueChanged
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        // TODO add your handling code here:
+        // add new new airport
+
+        try {
+
+            Airport airport = new Airport();
+
+            airport.setCode(tfCode.getText());
+            airport.setCity(tfCity.getText());
+            airport.setLatitude(Double.parseDouble(tfLatitude.getText()));
+            airport.setLongitude(Double.parseDouble(tfLongitude.getText()));
+            
+            Airport.Kind kind = Airport.Kind.valueOf(comboKind.getSelectedItem().toString())  ;
+            airport.setKind(kind);
+           
+            String addNew = apiAirports.addNew(airport);
+
+            // refresh list
+            modelAirportList.removeAllElements();
+            list = apiAirports.getAllAirports();
+            for (Airport refresh : list) {
+                modelAirportList.addElement(refresh.toString());
+            }
+        } catch (ApiErrorException ex) {
+            throw new RuntimeException("api error");
+        }
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed

@@ -16,7 +16,7 @@ public class Airport {
     private double longitude;
     private Kind kind;
     
-    enum Kind{
+    public enum Kind{
         Passenger,Cargo,Military,Private
     };
 
@@ -51,10 +51,20 @@ public class Airport {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
+
+    public Kind getKind() {
+        return kind;
+    }
+
+    public void setKind(Kind kind) {
+        this.kind = kind;
+    }
+    
+    
     
      @Override
     public String toString() {
-        return String.format("%s: %s with %d , %d  for (%s)", code, city, latitude, longitude,kind);
+        return String.format("%s: in %s %f , %f  for (%s)", code, city, latitude, longitude,kind);
     }
     
 }
