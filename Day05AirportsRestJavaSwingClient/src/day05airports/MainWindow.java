@@ -78,6 +78,11 @@ public class MainWindow extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lstAirports.setModel(modelAirportList);
+        lstAirports.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lstAirportsMouseClicked(evt);
+            }
+        });
         lstAirports.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 lstAirportsValueChanged(evt);
@@ -95,7 +100,17 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabel5.setText("Kind:");
 
+        tfCode.setFocusCycleRoot(true);
+        tfCode.setNextFocusableComponent(tfCity);
         tfCode.setPreferredSize(new java.awt.Dimension(90, 25));
+
+        tfCity.setFocusCycleRoot(true);
+        tfCity.setNextFocusableComponent(tfLatitude);
+
+        tfLatitude.setFocusCycleRoot(true);
+        tfLatitude.setNextFocusableComponent(tfLongitude);
+
+        tfLongitude.setFocusCycleRoot(true);
 
         comboKind.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Passenger", "Cargo", "Military", "Private" }));
 
@@ -225,7 +240,8 @@ public class MainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lstAirportsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstAirportsValueChanged
-        // TODO add your handling code here:
+        // TODO get seletted row's data
+        //System.out.println("New selection: " + lstAirports.getSelectedValue());
     }//GEN-LAST:event_lstAirportsValueChanged
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
@@ -239,11 +255,21 @@ public class MainWindow extends javax.swing.JFrame {
             airport.setCity(tfCity.getText());
             airport.setLatitude(Double.parseDouble(tfLatitude.getText()));
             airport.setLongitude(Double.parseDouble(tfLongitude.getText()));
-            
-            Airport.Kind kind = Airport.Kind.valueOf(comboKind.getSelectedItem().toString())  ;
+
+            Airport.Kind kind = Airport.Kind.valueOf(comboKind.getSelectedItem().toString());
             airport.setKind(kind);
-           
+
             String addNew = apiAirports.addNew(airport);
+
+            //clear fields if successfull
+            if (addNew.equals(airport.getCode())) {
+                tfCode.setText("");
+                tfCity.setText("");
+                tfLatitude.setText("");
+                tfLongitude.setText("");
+                comboKind.setSelectedItem(Airport.Kind.Passenger);
+                JOptionPane.showMessageDialog(null, "Airport saved! ");
+            }
 
             // refresh list
             modelAirportList.removeAllElements();
@@ -252,7 +278,7 @@ public class MainWindow extends javax.swing.JFrame {
                 modelAirportList.addElement(refresh.toString());
             }
         } catch (ApiErrorException ex) {
-            throw new RuntimeException("api error");
+            JOptionPane.showMessageDialog(null, "api error: " + ex.getMessage());
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
@@ -271,6 +297,28 @@ public class MainWindow extends javax.swing.JFrame {
     private void btnImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnImportActionPerformed
+
+    private void lstAirportsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstAirportsMouseClicked
+        // TODO get seletted row's data
+        //Airport airport = new Airport();
+//        airport.setCode(tfCode.getText());
+//        airport.setCity(tfCity.getText());
+//        airport.setLatitude(Double.parseDouble(tfLatitude.getText()));
+//        airport.setLongitude(Double.parseDouble(tfLongitude.getText()));
+//
+//        Airport.Kind kind = Airport.Kind.valueOf(comboKind.getSelectedItem().toString());
+//        airport.setKind(kind);
+        String[] rowItems = lstAirports.getSelectedValue().split("\\s+");
+        
+            
+            tfCode.setText(rowItems[0]);
+            tfCity.setText(rowItems[2]);
+            tfLatitude.setText(rowItems[4]);
+            tfLongitude.setText(rowItems[6].replace(",", ""));
+            Airport.Kind kind = Airport.Kind.valueOf(rowItems[7]);
+            comboKind.setSelectedItem(kind.toString());
+
+    }//GEN-LAST:event_lstAirportsMouseClicked
 
     /**
      * @param args the command line arguments

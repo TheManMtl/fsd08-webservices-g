@@ -64,7 +64,13 @@ public class Airport {
     
      @Override
     public String toString() {
-        return String.format("%s: in %s %f , %f  for (%s)", code, city, latitude, longitude,kind);
+        return String.format("%s in %s at %f /  %f, %s", code, city, latitude, longitude,kind);
     }
     
+    /*
+          YUL in Montreal at 45.4697842 / -73.7554174, Passenger,
+          YYZ in Toronto at 43.6777215 / -79.6270084, Passenger, 
+          JFK in New York JFK at 40.6413151 / -73.7803278, Passenger
+          
+          */
 }

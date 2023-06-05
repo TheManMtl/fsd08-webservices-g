@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -48,6 +49,21 @@ public class ApiAirports {
            
             return sendJson(airport, connect("POST", url));
         } catch (IOException e) {
+            throw new ApiErrorException(e);
+        }
+    }
+    
+    public Airport getByCode(String code) throws ApiErrorException {
+        //TODO select from list fill the fields on window
+        try {
+            URL url = new URL(BASE_URL + "/" + code);
+            connect("GET", url);
+
+            String jsonString = getString(url);
+            //Using the GSON library parse the string straight into an arraylist of airports and return it
+            return gson.fromJson(jsonString, Airport.class);
+
+        } catch (MalformedURLException e) {
             throw new ApiErrorException(e);
         }
     }
@@ -129,20 +145,7 @@ public class ApiAirports {
 
 
 /*
-    public Todo getById(int id) throws ApiErrorException {
-        //TODO select from list fill the fields on window
-        try {
-            URL url = new URL(BASE_URL + "/" + id);
-            connect("GET", url);
-
-            String jsonString = getString(url);
-            //Using the GSON library parse the string straight into an arraylist of todos and return it
-            return gson.fromJson(jsonString, Todo.class);
-
-        } catch (MalformedURLException e) {
-            throw new ApiErrorException(e);
-        }
-    }
+    
 
    
     public long update(Todo todo) throws ApiErrorException {
