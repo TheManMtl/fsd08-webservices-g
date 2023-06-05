@@ -260,7 +260,7 @@ public class MainWindow extends javax.swing.JFrame {
                 tfLatitude.setText("");
                 tfLongitude.setText("");
                 comboKind.setSelectedItem(Airport.Kind.Passenger);
-                JOptionPane.showMessageDialog(null, "Airport update! ");
+                JOptionPane.showMessageDialog(null, "Airport saved! ");
             }
 
             // refresh list
@@ -313,12 +313,92 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnFindNearestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindNearestActionPerformed
-        // TODO add your handling code here:
+        //  
+        // find selected lan/lon
+        // go one by one of the list save the distances
+        // find the smalles
+
+        String selectedRow = lstAirports.getSelectedValue();
+        double[] selectedCoord = getLanLon(selectedRow);
+        double[] coords = new double[2];
+        double selectedLan = selectedCoord[0];
+        double selectedLon = selectedCoord[1];
+
+        double[] distances = new double[lstAirports.getModel().getSize()];
+
+        String[] theList = new String[lstAirports.getModel().getSize()];
+        //save distances
+        for (int i = 0; i < lstAirports.getModel().getSize(); i++) {
+            //System.out.println(lstAirports.getModel().getElementAt(i));
+            theList[i] = lstAirports.getModel().getElementAt(i);
+            coords = getLanLon(theList[i]);
+            distances[i] = distance(selectedLan, coords[0], selectedLon, coords[1], 0, 0);
+        }
+
+        JOptionPane.showMessageDialog(null, theList[findLowestDistance(distances)]);
+        //System.out.println();
+   
+
     }//GEN-LAST:event_btnFindNearestActionPerformed
 
+    private double[] getLanLon(String row) {
+        String[] rowItems = row.split("\\s+");
+        double[] coordinates = new double[2];
+        coordinates[0] = Double.parseDouble(rowItems[4]);
+        coordinates[1] = Double.parseDouble(rowItems[6].replace(",", ""));
+
+        return coordinates;
+    }
+
+    private int findLowestDistance(double[] distances) {
+
+        double min = distances[0];
+        int indexMin = 0;
+        for (int i = 1; i < distances.length; i++) {
+
+            if (distances[i] != 0 && distances[i] < min) {
+                min = distances[i];
+                indexMin = i;
+            }
+        }
+
+        return indexMin;
+    }
+
+    private double distance(double latSelected, double latDestiny, double lonSelected,
+            double lonDestiny, double el1, double el2) {
+
+        final int R = 6371; // Radius of the earth
+
+        double latDistance = Math.toRadians(latDestiny - latSelected);
+        double lonDistance = Math.toRadians(lonDestiny - lonSelected);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(latSelected)) * Math.cos(Math.toRadians(latDestiny))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c * 1000; // convert to meters
+
+        double height = el1 - el2;
+
+        distance = Math.pow(distance, 2) + Math.pow(height, 2);
+
+        return Math.sqrt(distance);
+    }
     private void btnImportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnImportActionPerformed
+
+
+    private void lstAirportsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstAirportsMouseClicked
+        String[] rowItems = lstAirports.getSelectedValue().split("\\s+");
+
+        tfCode.setText(rowItems[0]);
+        tfCity.setText(rowItems[2]);
+        tfLatitude.setText(rowItems[4]);
+        tfLongitude.setText(rowItems[6].replace(",", ""));
+        Airport.Kind kind = Airport.Kind.valueOf(rowItems[7]);
+        comboKind.setSelectedItem(kind.toString());
+    }//GEN-LAST:event_lstAirportsMouseClicked
 
     private void refreshList() throws ApiErrorException {
         modelAirportList.removeAllElements();
@@ -340,17 +420,6 @@ public class MainWindow extends javax.swing.JFrame {
         airport.setKind(kind);
         return airport;
     }
-
-    private void lstAirportsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstAirportsMouseClicked
-        String[] rowItems = lstAirports.getSelectedValue().split("\\s+");
-
-        tfCode.setText(rowItems[0]);
-        tfCity.setText(rowItems[2]);
-        tfLatitude.setText(rowItems[4]);
-        tfLongitude.setText(rowItems[6].replace(",", ""));
-        Airport.Kind kind = Airport.Kind.valueOf(rowItems[7]);
-        comboKind.setSelectedItem(kind.toString());
-    }//GEN-LAST:event_lstAirportsMouseClicked
 
     /**
      * @param args the command line arguments
