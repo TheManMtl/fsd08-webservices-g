@@ -16,6 +16,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -77,6 +79,16 @@ public class ApiAirports {
             //Using the GSON library parse the string straight into an arraylist of todos and return it
             return conn.getResponseCode() == 200 || conn.getResponseCode() == 201;
 
+        } catch (IOException e) {
+            throw new ApiErrorException(e);
+        }
+    }
+    
+     public String update(Airport airport) throws ApiErrorException {
+        try {
+            URL url = new URL(BASE_URL + "/airports/" + airport.getCode());
+            HttpURLConnection conn = connect("PUT", url);
+            return sendJson(airport, conn);
         } catch (IOException e) {
             throw new ApiErrorException(e);
         }
@@ -156,34 +168,3 @@ public class ApiAirports {
         }
     }
 }
-
-
-/*
-    
-
-   
-    public long update(Todo todo) throws ApiErrorException {
-        try {
-            URL url = new URL(BASE_URL + "/" + todo.id);
-            HttpURLConnection conn = connect("PUT", url);
-
-            return sendJson(todo, conn);
-
-        } catch (IOException e) {
-            throw new ApiErrorException(e);
-        }
-    }
-
-    public boolean delete(int id) throws ApiErrorException {
-         try {
-            URL url = new URL(BASE_URL + "/" + id);
-            HttpURLConnection conn = connect("DELETE", url);
-
-            //Using the GSON library parse the string straight into an arraylist of todos and return it
-            return conn.getResponseCode() == 200 || conn.getResponseCode() == 201;
-
-        } catch (IOException e) {
-            throw new ApiErrorException(e);
-        }
-    }
- */

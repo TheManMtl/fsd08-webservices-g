@@ -249,15 +249,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         try {
 
-            Airport airport = new Airport();
-
-            airport.setCode(tfCode.getText());
-            airport.setCity(tfCity.getText());
-            airport.setLatitude(Double.parseDouble(tfLatitude.getText()));
-            airport.setLongitude(Double.parseDouble(tfLongitude.getText()));
-
-            Airport.Kind kind = Airport.Kind.valueOf(comboKind.getSelectedItem().toString());
-            airport.setKind(kind);
+            Airport airport = prepAirport();
 
             String addNew = apiAirports.addNew(airport);
 
@@ -268,7 +260,7 @@ public class MainWindow extends javax.swing.JFrame {
                 tfLatitude.setText("");
                 tfLongitude.setText("");
                 comboKind.setSelectedItem(Airport.Kind.Passenger);
-                JOptionPane.showMessageDialog(null, "Airport saved! ");
+                JOptionPane.showMessageDialog(null, "Airport update! ");
             }
 
             // refresh list
@@ -280,7 +272,27 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        // 
+        try {
+            // update airport
+            Airport airport = prepAirport();
+
+            String editRow = apiAirports.update(airport);
+
+            //clear fields if successfull
+            if (editRow.equals(airport.getCode())) {
+                tfCode.setText("");
+                tfCity.setText("");
+                tfLatitude.setText("");
+                tfLongitude.setText("");
+                comboKind.setSelectedItem(Airport.Kind.Passenger);
+                JOptionPane.showMessageDialog(null, "Airport updated! ");
+            }
+
+            // refresh list
+            refreshList();
+        } catch (ApiErrorException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
 
     }//GEN-LAST:event_btnUpdateActionPerformed
@@ -314,6 +326,19 @@ public class MainWindow extends javax.swing.JFrame {
         for (Airport refresh : list) {
             modelAirportList.addElement(refresh.toString());
         }
+    }
+
+    private Airport prepAirport() {
+        Airport airport = new Airport();
+
+        airport.setCode(tfCode.getText());
+        airport.setCity(tfCity.getText());
+        airport.setLatitude(Double.parseDouble(tfLatitude.getText()));
+        airport.setLongitude(Double.parseDouble(tfLongitude.getText()));
+
+        Airport.Kind kind = Airport.Kind.valueOf(comboKind.getSelectedItem().toString());
+        airport.setKind(kind);
+        return airport;
     }
 
     private void lstAirportsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstAirportsMouseClicked
