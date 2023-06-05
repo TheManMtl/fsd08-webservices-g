@@ -97,12 +97,13 @@ Airports.remove = (code, result) => {
 
 // return all airports[default sort by code]
 Airports.getAll = (sortOrder, result) => {
-    //console.log("sort: " + sortOrder);
+
+    
+    let sorts = ['code', 'city', 'kink'];
 
     //sort by kind is a enum needs a different query
     let flag = sortOrder === "kind" ? 'CAST(?? AS CHAR)' : ' ??';
     var query = conDb.format(`SELECT * FROM airports ORDER BY ${flag}  ASC`, sortOrder);
-
 
     conDb.query(query, (err, res) => {
         if (err) {
@@ -114,7 +115,24 @@ Airports.getAll = (sortOrder, result) => {
         //console.log("result getAll:",res);
     });
 };
-var counter = 0;
+
+Airports.getByCoordinates = (lanLon, result) => {
+
+    console.log('mapsort:coordinate ', lanLon);
+    //console.log('mapsort:query ',conDb.format(`SELECT ??, ?? FROM airports`, [lanLon]));
+    var query = conDb.format(`SELECT ??, ?? FROM airports`, [lanLon]);
+
+    conDb.query(query, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
+        result(null, res);
+
+    });
+};
+
 //return one airport by city
 //FIXME: RETURNS always true the return inside connection is not trigring
 Airports.isCityExists = (city, result) => {
@@ -127,9 +145,9 @@ Airports.isCityExists = (city, result) => {
             result(err, null);
             return;
         }
-        return res[0].countCity > 0;
+        result(null, res[0]);
     });
-    return true;
+    result;
 };
 
 module.exports = Airports;

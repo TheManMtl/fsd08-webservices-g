@@ -42,6 +42,7 @@ exports.create = (req, res) => {
 
 exports.findAll = (req, res) => {
 
+    
     const sort = req.query.sort;
 
     Airport.getAll(sort, (err, data) => {
@@ -55,6 +56,21 @@ exports.findAll = (req, res) => {
         }
     });
 };
+
+exports.findAllCoordinates = (req, res) => {
+    const lanLon = req.query.map;
+
+    Airport.getAll(lanLon, (err, data) => {
+        if (err)
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving airports."
+            });
+        else {
+            res.status(200).send(data);
+        }
+    });
+}
 
 //Find a single airport by code
 exports.findOne = (req, res) => {
@@ -180,18 +196,13 @@ function isValid(req, res) {
         return false;
     }
 
-//FIXME: not working
+    //FIXME: not working
     // return false if city exists 
     // returns true if all above validation passes along with city vlidation
-/* 
-    if (Airport.isCityExists(city)) {
-        res.status(209).send({
-            message: "city already exists!!! action not completed!!"
-        });
+    // Airport.isCityExists(city, (req, res) => {
+    //     console.log('res: ' + res[0]['cityCount'])
+    // })
 
-        return false;
-    }
-*/
-    return true; 
+    return true;
 
 }
