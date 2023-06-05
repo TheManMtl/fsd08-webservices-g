@@ -97,10 +97,10 @@ Airports.remove = (code, result) => {
 
 // return all airports[default sort by code]
 Airports.getAll = (sortOrder, result) => {
-    console.log("sort: " + sortOrder);
+    //console.log("sort: " + sortOrder);
     var query = conDb.format("SELECT * FROM airports ORDER BY ?? ASC", sortOrder);
 
-    //console.log("query to exe:", query);
+
     conDb.query(query, (err, res) => {
         if (err) {
             console.log("error: ", err);
@@ -108,29 +108,25 @@ Airports.getAll = (sortOrder, result) => {
             return;
         }
         result(null, res);
+        //console.log("result getAll:",res);
     });
 };
-
+var counter = 0;
 //return one airport by city
-//FIXME: NOT WORKING
+//FIXME: RETURNS always true the return inside connection is not trigring
 Airports.isCityExists = (city, result) => {
-    console.log("UU are here!");
-    conDb.query(`SELECT count(??) AS countCity FROM airports`, [city], (err, res) => {
-        console.log("U are here!");
+
+    var query = conDb.format("SELECT COUNT(city) as countCity FROM airports WHERE city = ?", city);
+    conDb.query(query, (err, res) => {
+
         if (err) {
             console.log("error: ", err);
             result(err, null);
             return;
         }
-        console.log("!res.length: ", !res.length);
-        if (res.length > 0) {
-            console.log("not found city: ", res[0]);
-            return;
-        }
-
-        // not found airport with the code
-        result({ available: "already_exists" }, null);
+        return res[0].countCity > 0;
     });
+    return true;
 };
 
 module.exports = Airports;

@@ -25,7 +25,7 @@ exports.create = (req, res) => {
             "kind": "kind",
              }
         */
-        console.log("airport obj in creat: ", airport);
+
         // Save Airport in the database
         Airport.create(airport, (err, data) => {
             if (err)
@@ -120,26 +120,7 @@ exports.delete = (req, res) => {
 };
 
 //FIXEME: TO RETURN IF THE CITY EXISTS
-/* var city_exists = (req, res) => {
-    Airport.isCityExists(req.city, (err, data) => {
-        console.log("city_exists.err.message: ");
-        if (err) {
-            if (err.available == "already_exists") {
-                res.status(404).send({
-                    message: `city name  ${req.params.city} already exists.`
-                });
-            } else {
-                res.status(500).send({
-                    message: "Error retrieving city name " + req.params.city
-                });
-            }
-        } else {
-            res.status(200).send(data);
-        }
-    }); 
 
-};
-*/
 //validation controller
 function isValid(req, res) {
     let codeRegex = /^[a-zA-Z]+$/
@@ -184,7 +165,6 @@ function isValid(req, res) {
 
     // latitude -90 to 90,
     // longitude -180 to 180
-    console.log("atitude -90 to 90: ", latitude < -90)
 
     if (latitude < -90 || latitude > 90 && longitude < -180 || longitude > 180) {
         res.status(400).send({
@@ -192,18 +172,26 @@ function isValid(req, res) {
         });
         return false;
     }
-
-    if(city.length<1 || city.lenght>40){
+    //city between 1-40 chars long
+    if (city.length < 1 || city.lenght > 40) {
         res.status(400).send({
             message: "city is too short or too long!!! action not completed!!"
         });
         return false;
     }
-    //FIXME: validation duplicate city
-    //city cannot be duplicated
-    //if (city_exists.err == `city name  ${req.params.city} already exists.` || req.body.data) return false;
 
+//FIXME: not working
+    // return false if city exists 
+    // returns true if all above validation passes along with city vlidation
+/* 
+    if (Airport.isCityExists(city)) {
+        res.status(209).send({
+            message: "city already exists!!! action not completed!!"
+        });
 
-    return true;
+        return false;
+    }
+*/
+    return true; 
 
 }

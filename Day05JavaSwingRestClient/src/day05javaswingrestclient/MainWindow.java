@@ -26,7 +26,7 @@ public class MainWindow extends javax.swing.JFrame {
     ApiTodos apiTodos = new ApiTodos();
 
     /**
-     * Creates new form MainWindow
+     * Creates new form MainWindow todo
      */
     public MainWindow() {
         try {

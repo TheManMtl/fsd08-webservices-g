@@ -130,3 +130,5 @@ dist
 .pnp.*
 /Day05JavaSwingRestClient/nbproject/private/
 /Day05JavaSwingRestClient/build/
+/Day05AirportsRestJavaSwingClient/nbproject/private/
+/Day05AirportsRestJavaSwingClient/build/
