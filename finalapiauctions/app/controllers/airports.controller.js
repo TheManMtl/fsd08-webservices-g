@@ -1,55 +1,57 @@
-const Airport = require("../models/airports.model");
+const Auction = require("../models/auctions.model");
 
-//Create and Save a new Todo
+//Create and Save a new Auction
 exports.create = (req, res) => {
 
     //if all validation passes true otherwise false
     if (isValid(req, res)) {
 
 
-        // Create a Airport obj
-        const airport = new Airport({
-            code: req.body.code.toUpperCase(),
-            city: req.body.city,
-            latitude: req.body.latitude,
-            longitude: req.body.longitude,
-            kind: req.body.kind,
+        // Create a Auction obj
+        const auction = new Auction({
+
+            id: req.body.id,
+            itemCode: req.body.itemCode,
+            itemDesc: req.body.itemDesc,
+            sellerEmail: req.body.sellerEmail,
+            lastBidderEmail: '',
+            lastBid: 0
+        
         });
 
         /*  
              {
-            "code": "code",
-            "city": "city",
-            "latitude": "latitude",
-            "longitude": "longitude",
-            "kind": "kind",
+            id: req.body.id,
+            itemCode: req.body.itemCode,
+            itemDesc: req.body.itemDesc,
+            sellerEmail: req.body.sellerEmail,
+            lastBidderEmail: req.body.lastBidderEmail,
+            lastBid: req.body.lastBid
              }
         */
 
-        // Save Airport in the database
-        Airport.create(airport, (err, data) => {
+        // Save Auction in the database
+        Auction.create(auction, (err, data) => {
             if (err)
                 res.status(500).send({
                     message:
-                        err.message || "Some error occurred while creating the Airport."
+                        err.message || "error in creating Auction."
                 });
             else res.status(201).send(data);
         });
     }
 };
 
-// Retrieve all Aiports from the database.
-
+// Retrieve all Auctions from the database.
 exports.findAll = (req, res) => {
 
-    
-    const sort = req.query.sort;
+    const sortBy = req.query.sortBy;
 
-    Airport.getAll(sort, (err, data) => {
+    Auction.getAll(sortBy, (err, data) => {
         if (err)
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while retrieving airports."
+                    err.message || "error in fetching Auctions."
             });
         else {
             res.status(200).send(data);
@@ -57,32 +59,17 @@ exports.findAll = (req, res) => {
     });
 };
 
-exports.findAllCoordinates = (req, res) => {
-    const lanLon = req.query.map;
-
-    Airport.getAll(lanLon, (err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving airports."
-            });
-        else {
-            res.status(200).send(data);
-        }
-    });
-}
-
-//Find a single airport by code
+//Find a single Auction by id
 exports.findOne = (req, res) => {
-    Airport.findByCode(req.params.code, (err, data) => {
+    Auction.findById(req.params.id, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found airport with code ${req.params.code}.`
+                    message: `auction not found with id ${req.params.id}.`
                 });
             } else {
                 res.status(500).send({
-                    message: "Error retrieving airport with code " + req.params.code
+                    message: `error in fetching an auction.${req.params.id}` 
                 });
             }
         } else {
@@ -91,64 +78,47 @@ exports.findOne = (req, res) => {
     });
 };
 
-
-//Update an airport by code
+//Update an auction by id
 exports.update = (req, res) => {
 
-    //record need to be exists(404) -->record not found
-    if (isValid(req, res)) {
-        Airport.updateByCode(
-            req.params.code,
-            new Airport(req.body),
+    
+    
+        Auction.updateById(
+            req.params.id,
+            new Auction(req.body),
             (err, data) => {
                 if (err) {
                     if (err.kind === "not_found") {
                         res.status(404).send({
-                            message: `Not found airport with code ${req.params.code}.`
+                            message: `auction not found  with id ${req.params.id}.`
                         });
                     } else {
                         res.status(500).send({
-                            message: "Error updating airport with id " + req.params.code
+                            message: `updating not successfull with id ${req.params.id}.`
                         });
                     }
                 } else res.status(200).send(data);
             }
         );
-    }
+    
 };
 
-
-//Delete a Todo with id
-exports.delete = (req, res) => {
-    Airport.remove(req.params.code, (err, data) => {
-        if (err) {
-            if (err.kind === "not_found") {
-                res.status(404).send({
-                    message: `Not found airport with code ${req.params.code}.`
-                });
-            } else {
-                res.status(500).send({
-                    message: "Could not delete airport with id " + req.params.code
-                });
-            }
-        } else res.status(200).send(data);
-    });
-};
-
-//FIXEME: TO RETURN IF THE CITY EXISTS
-
-//validation controller
+//validation controller 
+// returns trure if all conditions met
 function isValid(req, res) {
-    let codeRegex = /^[a-zA-Z]+$/
-    let code = req.body.code;
-    let city = req.body.city;
 
-    //TOFIX: in case no validation delete the variable
-    let latitude = req.body.latitude;
-    let longitude = req.body.longitude;
-    let kind = req.body.kind;
+    
+    let itemCode = req.body.itemCode;
+    let itemDesc = req.body.itemDesc;
 
-    var kindList = ['Passenger', 'Cargo', 'Military', 'Private'];
+
+    /*let id = auction.id;  
+    let sellerEmail = req.body.sellerEmail;
+     let lastBidderEmail = req.body.lastBidderEmail;
+     let lastBid = req.body.lastBid; */
+
+    //TODO: seller email validation
+    //TODO: itemCode IS UNIOQUE
 
     //validate body
     if (!req.body) {
@@ -157,51 +127,22 @@ function isValid(req, res) {
         });
         return false;
     }
-    //code ONLY chars
-    if (!isNaN(code) || !codeRegex.test(code)) {
+
+    //itemDesc ONLY 1-200 letters
+    if (itemDesc.length < 1 || itemDesc.length > 200) {
         res.status(400).send({
-            message: "code must be only charachter!!! action not completed ;)"
-        });
-        return false;
-    }
-    //code ONLY 3-6 letters
-    if (code.length < 3 || code.length > 6) {
-        res.status(400).send({
-            message: "code must be 3-6 charachter!!! action not completed ;)"
+            message: "description empty or more than 200 charachters!!! action not completed ;)"
         });
         return false;
     }
 
-    if (!kindList.includes(kind)) {
+    //itemCode ONLY 2-20 letters
+    if (itemCode.length < 2 || itemCode.length > 20) {
         res.status(400).send({
-            message: "No such type of airplane!!! action not completed"
+            message: "item code needs at least 2 and maximum 20 charachters!!! action not completed ;)"
         });
         return false;
     }
-
-    // latitude -90 to 90,
-    // longitude -180 to 180
-
-    if (latitude < -90 || latitude > 90 && longitude < -180 || longitude > 180) {
-        res.status(400).send({
-            message: "No such location!!! action not completed!!"
-        });
-        return false;
-    }
-    //city between 1-40 chars long
-    if (city.length < 1 || city.lenght > 40) {
-        res.status(400).send({
-            message: "city is too short or too long!!! action not completed!!"
-        });
-        return false;
-    }
-
-    //FIXME: not working
-    // return false if city exists 
-    // returns true if all above validation passes along with city vlidation
-    // Airport.isCityExists(city, (req, res) => {
-    //     console.log('res: ' + res[0]['cityCount'])
-    // })
 
     return true;
 

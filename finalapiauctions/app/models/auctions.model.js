@@ -58,9 +58,6 @@ Auction.findById = (id, result) => {
 //create an auction
 Auction.create = (newAuction, result) => {
 
-    newAuction.lastBid = 0;
-    auction.lastBidderEmail = "";
-
     db.query("INSERT INTO auctions SET ?", newAuction, (err, res) => {
         if (err) {
             console.log("error: ", err);

@@ -1,7 +1,8 @@
 //CREATE CONTROLLER
-//TODO: create a record, make sure seller email is valid and itemDesc is 1-200 characters long.
-//TODO: itemCode is a string with length 2-20 characters made up of letters, digits, dashes, dots or spaces.
-//If an item with such itemCode already exists API must return 409 (conflict) code with error explanation in the body.
+//TODO: create a record, make sure seller email is valid 
+
+//TODO: 
+If an item with such itemCode already exists API must return 409 (conflict) code with error explanation in the body.
 
 
 //UPDATE CONTROLLER
