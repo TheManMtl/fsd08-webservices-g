@@ -53,6 +53,7 @@ public class ApiAirports {
         }
     }
     
+    // no btn to implement
     public Airport getByCode(String code) throws ApiErrorException {
         //TODO select from list fill the fields on window
         try {
@@ -64,6 +65,19 @@ public class ApiAirports {
             return gson.fromJson(jsonString, Airport.class);
 
         } catch (MalformedURLException e) {
+            throw new ApiErrorException(e);
+        }
+    }
+    
+    public boolean delete(String code) throws ApiErrorException {
+         try {
+            URL url = new URL(BASE_URL + "/airports/" + code);
+            HttpURLConnection conn = connect("DELETE", url);
+             System.out.println("url: "+url);
+            //Using the GSON library parse the string straight into an arraylist of todos and return it
+            return conn.getResponseCode() == 200 || conn.getResponseCode() == 201;
+
+        } catch (IOException e) {
             throw new ApiErrorException(e);
         }
     }

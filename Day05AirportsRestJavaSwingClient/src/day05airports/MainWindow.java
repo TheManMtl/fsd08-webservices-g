@@ -272,22 +272,32 @@ public class MainWindow extends javax.swing.JFrame {
             }
 
             // refresh list
-            modelAirportList.removeAllElements();
-            list = apiAirports.getAllAirports();
-            for (Airport refresh : list) {
-                modelAirportList.addElement(refresh.toString());
-            }
+            refreshList();
+
         } catch (ApiErrorException ex) {
             JOptionPane.showMessageDialog(null, "api error: " + ex.getMessage());
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        // TODO add your handling code here:
+        // 
+
+
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        // TODO add your handling code here:
+        try {
+            // delete an airport
+
+            System.out.println("tfCode.getText(): " + tfCode.getText());
+            Boolean isDeleted = apiAirports.delete(tfCode.getText());
+            if (isDeleted) {
+                JOptionPane.showMessageDialog(null, "Airport deleted!!");
+                refreshList();
+            }
+        } catch (ApiErrorException ex) {
+            JOptionPane.showMessageDialog(null, "api error: " + ex.getMessage());
+        }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnFindNearestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindNearestActionPerformed
@@ -298,26 +308,23 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnImportActionPerformed
 
-    private void lstAirportsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstAirportsMouseClicked
-        // TODO get seletted row's data
-        //Airport airport = new Airport();
-//        airport.setCode(tfCode.getText());
-//        airport.setCity(tfCity.getText());
-//        airport.setLatitude(Double.parseDouble(tfLatitude.getText()));
-//        airport.setLongitude(Double.parseDouble(tfLongitude.getText()));
-//
-//        Airport.Kind kind = Airport.Kind.valueOf(comboKind.getSelectedItem().toString());
-//        airport.setKind(kind);
-        String[] rowItems = lstAirports.getSelectedValue().split("\\s+");
-        
-            
-            tfCode.setText(rowItems[0]);
-            tfCity.setText(rowItems[2]);
-            tfLatitude.setText(rowItems[4]);
-            tfLongitude.setText(rowItems[6].replace(",", ""));
-            Airport.Kind kind = Airport.Kind.valueOf(rowItems[7]);
-            comboKind.setSelectedItem(kind.toString());
+    private void refreshList() throws ApiErrorException {
+        modelAirportList.removeAllElements();
+        list = apiAirports.getAllAirports();
+        for (Airport refresh : list) {
+            modelAirportList.addElement(refresh.toString());
+        }
+    }
 
+    private void lstAirportsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstAirportsMouseClicked
+        String[] rowItems = lstAirports.getSelectedValue().split("\\s+");
+
+        tfCode.setText(rowItems[0]);
+        tfCity.setText(rowItems[2]);
+        tfLatitude.setText(rowItems[4]);
+        tfLongitude.setText(rowItems[6].replace(",", ""));
+        Airport.Kind kind = Airport.Kind.valueOf(rowItems[7]);
+        comboKind.setSelectedItem(kind.toString());
     }//GEN-LAST:event_lstAirportsMouseClicked
 
     /**

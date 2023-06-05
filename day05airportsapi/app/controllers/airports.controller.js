@@ -62,7 +62,7 @@ exports.findOne = (req, res) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found ToDo with code ${req.params.code}.`
+                    message: `Not found airport with code ${req.params.code}.`
                 });
             } else {
                 res.status(500).send({
