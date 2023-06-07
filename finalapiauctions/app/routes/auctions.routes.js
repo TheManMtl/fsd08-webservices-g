@@ -14,6 +14,6 @@ module.exports = app => {
   
     // auction update router
    router.patch("/:id([0-9]+)", auction.update);
-    
-    app.use('/api/airports', router);
+  
+    app.use('/api/auctions', router);
   };

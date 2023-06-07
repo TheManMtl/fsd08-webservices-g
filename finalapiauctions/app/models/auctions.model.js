@@ -12,14 +12,14 @@ const Auction = function (auction) {
     this.itemDesc = auction.itemDesc;
     this.sellerEmail = auction.sellerEmail;
     this.lastBidderEmail = auction.lastBidderEmail;
-    this.kind = auction.lastBid;
+    this.lastBid = auction.lastBid;
 };
 
 
 // return all auctions[default sort by id]
 Auction.getAll = (sortOrder, result) => {
 
-    //sort by kind is a enum needs a different query
+    
 
     var query = db.format(`SELECT * FROM auctions ORDER BY ??  ASC`, sortOrder);
 
@@ -64,15 +64,16 @@ Auction.create = (newAuction, result) => {
             result(err, null);
             return;
         }
-        result(null, { id: id, itemCode: itemCode, itemDesc: itemDesc, sellerEmail: sellerEmail });
+        result(null, {id: res.insertId, itemCode: res.itemCode, itemDesc: res.itemDesc, sellerEmail: res.sellerEmail });
     });
 };
 
 
 //update an auction 
 Auction.updateById = (id, auction, result) => {
+    console.log('update auction model: ',auction)
     db.query(
-        "UPDATE auctions SET lastBid = ? lastBidderEmail = ? WHERE id = ?",
+        "UPDATE auctions SET lastBid = ?, lastBidderEmail = ? WHERE id = ?",
         [auction.lastBid, auction.lastBidderEmail, id],
         (err, res) => {
             if (err) {
@@ -87,8 +88,8 @@ Auction.updateById = (id, auction, result) => {
                 return;
             }
 
-            console.log("updated auction: ", { id: id, itemCode: itemCode, itemDesc: itemDesc, sellerEmail: sellerEmail });
-            result(null, { id: id, itemCode: itemCode, itemDesc: itemDesc, sellerEmail: sellerEmail });
+            console.log("updated auction: ", { id: id, ...auction });
+            result(null, { id: id, ...auction });
         }
     );
 };

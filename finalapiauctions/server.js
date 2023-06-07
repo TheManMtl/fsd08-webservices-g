@@ -10,8 +10,7 @@ app.get("/", (req, res) => {
     res.json({ message: "Welcome to Ehsan Auctions application." });
 });
 
-//TODO:
-//require("./app/routes/airports.routes")(app);
+require("./app/routes/auctions.routes")(app);
 
 //TODO: web client home page
 /* app.use(express.static('static')); */

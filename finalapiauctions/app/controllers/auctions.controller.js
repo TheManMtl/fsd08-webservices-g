@@ -10,7 +10,6 @@ exports.create = (req, res) => {
         // Create a Auction obj
         const auction = new Auction({
 
-            id: req.body.id,
             itemCode: req.body.itemCode,
             itemDesc: req.body.itemDesc,
             sellerEmail: req.body.sellerEmail,
@@ -21,7 +20,7 @@ exports.create = (req, res) => {
 
         /*  
              {
-            id: req.body.id,
+           
             itemCode: req.body.itemCode,
             itemDesc: req.body.itemDesc,
             sellerEmail: req.body.sellerEmail,
